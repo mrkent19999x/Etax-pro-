@@ -12,8 +12,6 @@ export default function HoTroQuyetToanPage() {
 
   return (
     <div className="min-h-screen full-viewport bg-gray-800 flex flex-col">
-      </div>
-
       <DetailHeader title="Hỗ trợ quyết toán thuế TNCN" />
 
       {/* Content */}

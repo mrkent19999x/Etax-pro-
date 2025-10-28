@@ -18,10 +18,25 @@ export default function EtaxMobileHome() {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true"
     if (!loggedIn) {
       router.push("/login")
-    } else {
-      setIsLoggedIn(true)
+      return
     }
+    setIsLoggedIn(true)
   }, [router])
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC143C] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Đang tải...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isLoggedIn) {
+    return null
+  }
 
   const frequentFeatures = [
     { id: 1, icon: "📋", label: "Khai thuế CNKD", href: "/khai-thue" },
@@ -53,15 +68,9 @@ export default function EtaxMobileHome() {
     setCurrentCarouselIndex((prev) => Math.min(frequentFeatures.length - 4, prev + 1))
   }
 
-  if (!mounted || !isLoggedIn) {
-    return null
-  }
-
   return (
     <div className="min-h-screen full-viewport bg-[#f5f5f5] flex flex-col">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      </div>
-
       <div className="bg-[#DC143C] px-6 py-4 flex items-center justify-between">
         <button onClick={() => setSidebarOpen(true)} className="hover:opacity-80 transition-opacity">
           <Menu className="w-6 h-6 text-white cursor-pointer" />

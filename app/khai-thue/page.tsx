@@ -12,8 +12,6 @@ export default function KhaiThuePage() {
 
   return (
     <div className="min-h-screen full-viewport bg-gray-800 flex flex-col">
-      </div>
-
       <DetailHeader title="Khai thuế" />
 
       {/* Content */}

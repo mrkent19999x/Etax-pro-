@@ -9,8 +9,6 @@ export default function AccountInfoPage() {
 
   return (
     <div className="min-h-screen full-viewport bg-gray-100 flex flex-col">
-      </div>
-
       {/* Header */}
       <div className="bg-red-700 px-6 py-4 flex items-center justify-between">
         <button onClick={() => router.back()} className="hover:opacity-80 transition-opacity">

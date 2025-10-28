@@ -41,8 +41,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen full-viewport bg-gradient-to-b from-[#1a2a3a] to-[#0f1820] flex flex-col">
-      </div>
-
       {/* Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
         <div className="mb-8 flex flex-col items-center">
