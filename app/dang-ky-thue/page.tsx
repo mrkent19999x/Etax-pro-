@@ -1,8 +1,10 @@
 "use client"
 
 import { DetailHeader } from "@/components/detail-header"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function DangKyThuePage() {
+  useAuthGuard() // ✅ Thêm auth guard
   const services = [
     {
       id: 1,

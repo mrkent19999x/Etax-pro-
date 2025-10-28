@@ -1,8 +1,10 @@
 "use client"
 
 import { DetailHeader } from "@/components/detail-header"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function HoTroQuyetToanPage() {
+  useAuthGuard()
   const services = [
     { id: 1, icon: "📋", label: "Hỗ số quyết toán thuế" },
     { id: 2, icon: "✏️", label: "Tra cứu thông tin quyết toán" },

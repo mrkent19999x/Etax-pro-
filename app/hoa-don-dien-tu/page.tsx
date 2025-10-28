@@ -1,8 +1,10 @@
 "use client"
 
 import { DetailHeader } from "@/components/detail-header"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function HoaDonDienTuPage() {
+  useAuthGuard()
   const services = [
     { id: 1, icon: "📋", label: "Kê khai tờ khai đăng ký HĐDT" },
     { id: 2, icon: "📝", label: "Tờ khai chỗ xác thực" },

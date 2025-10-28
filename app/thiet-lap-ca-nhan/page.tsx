@@ -1,8 +1,10 @@
 "use client"
 
 import { DetailHeader } from "@/components/detail-header"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function ThietLapCaNhanPage() {
+  useAuthGuard()
   const services = [
     { id: 1, icon: "🖼️", label: "Thiết lập ảnh đại diện" },
     { id: 2, icon: "🔐", label: "Đổi mật khẩu đăng nhập" },

@@ -1,8 +1,10 @@
 "use client"
 
 import { DetailHeader } from "@/components/detail-header"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function TienIchPage() {
+  useAuthGuard() // ✅ Thêm auth guard
   const services = [
     { id: 1, icon: "💳", label: "Tra cứu bảng giá tính thuế phương tiền" },
     { id: 2, icon: "👤", label: "Tra cứu thông tin NNT" },

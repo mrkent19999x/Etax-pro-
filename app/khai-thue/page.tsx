@@ -1,8 +1,12 @@
 "use client"
 
 import { DetailHeader } from "@/components/detail-header"
+import { useAuthGuard } from "@/lib/auth-guard"
+import { useEffect } from "react"
 
 export default function KhaiThuePage() {
+  useAuthGuard() // ✅ Thêm auth guard
+  
   const services = [
     { id: 1, icon: "📋", label: "Khai thuế CNKD" },
     { id: 2, icon: "📝", label: "Tra cứu hồ sơ khai thuế" },

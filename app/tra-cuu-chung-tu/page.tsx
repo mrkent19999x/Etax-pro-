@@ -3,8 +3,10 @@
 import { DetailHeader } from "@/components/detail-header"
 import { Calendar } from "lucide-react"
 import { useState } from "react"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function TraCuuChungTuPage() {
+  useAuthGuard() // ✅ Thêm auth guard
   const [referenceCode, setReferenceCode] = useState("")
   const [fromDate, setFromDate] = useState("10/10/2025")
   const [toDate, setToDate] = useState("10/10/2025")

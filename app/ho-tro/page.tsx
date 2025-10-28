@@ -1,8 +1,10 @@
 "use client"
 
 import { DetailHeader } from "@/components/detail-header"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function HoTroPage() {
+  useAuthGuard() // ✅ Thêm auth guard
   const services = [
     { id: 1, icon: "📖", label: "Hướng dẫn sử dụng" },
     { id: 2, icon: "🎧", label: "Liên hệ hỗ trợ" },

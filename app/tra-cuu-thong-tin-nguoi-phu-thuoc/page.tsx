@@ -1,8 +1,10 @@
 "use client"
 
 import { DetailHeader } from "@/components/detail-header"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function TraCuuThongTinNguoiPhuThuocPage() {
+  useAuthGuard() // ✅ Thêm auth guard
   const services = [
     { id: 1, icon: "👤", label: "Tra cứu thông tin người phụ thuộc" },
     { id: 2, icon: "📋", label: "Kê khai người phụ thuộc" },

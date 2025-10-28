@@ -1,8 +1,10 @@
 "use client"
 
 import { DetailHeader } from "@/components/detail-header"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function TaxPaymentFunctionsPage() {
+  useAuthGuard()
   const services = [
     { id: 1, icon: "💳", label: "Nộp thuế" },
     { id: 2, icon: "💳", label: "Nộp thuế thay" },

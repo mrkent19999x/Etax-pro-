@@ -4,8 +4,10 @@ import { useState } from "react"
 import { DetailHeader } from "@/components/detail-header"
 import Link from "next/link"
 import { Eye } from "lucide-react"
+import { useAuthGuard } from "@/lib/auth-guard"
 
 export default function TraCuuNghiaVuThuePage() {
+  useAuthGuard() // ✅ Thêm auth guard
   const [activeService, setActiveService] = useState<number | null>(null)
   const [searchResults, setSearchResults] = useState<any[] | null>(null)
 
