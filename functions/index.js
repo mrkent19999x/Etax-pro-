@@ -169,6 +169,262 @@ exports.deleteUser = functions.https.onRequest(async (req, res) => {
   }
 });
 
+// ===================================
+// TEMPLATE MANAGEMENT APIs
+// ===================================
+
+// Create Template
+exports.createTemplate = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    const claims = await verifyAdminToken(req);
+    const { name, htmlTemplate, type = 'pdf', isActive = true, isDefault = false } = req.body;
+
+    if (!name || !htmlTemplate) {
+      return res.status(400).send('Name và htmlTemplate là bắt buộc');
+    }
+
+    const templateId = `template_${Date.now()}`;
+    await admin.firestore().collection('templates').doc(templateId).set({
+      id: templateId,
+      name,
+      htmlTemplate,
+      type,
+      isActive,
+      isDefault,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdBy: claims.uid
+    });
+
+    res.status(201).json({
+      message: 'Template created successfully',
+      templateId
+    });
+  } catch (error) {
+    console.error('Error creating template:', error);
+    res.status(500).send(error.message || 'Không thể tạo template');
+  }
+});
+
+// Get Templates
+exports.getTemplates = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'GET') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    await verifyAdminToken(req);
+
+    const snapshot = await admin.firestore().collection('templates').get();
+    const templates = [];
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      templates.push({
+        id: doc.id,
+        name: data.name || '',
+        htmlTemplate: data.htmlTemplate || '',
+        type: data.type || 'pdf',
+        isActive: data.isActive !== undefined ? data.isActive : true,
+        isDefault: data.isDefault !== undefined ? data.isDefault : false,
+        createdAt: data.createdAt
+      });
+    });
+
+    res.json({ templates });
+  } catch (error) {
+    console.error('Error getting templates:', error);
+    res.status(500).send(error.message || 'Không thể lấy danh sách templates');
+  }
+});
+
+// Update Template
+exports.updateTemplate = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'PUT') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    await verifyAdminToken(req);
+    const { templateId, name, htmlTemplate, isActive, isDefault } = req.body;
+
+    if (!templateId) {
+      return res.status(400).send('templateId là bắt buộc');
+    }
+
+    const updateData = {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    if (name !== undefined) updateData.name = name;
+    if (htmlTemplate !== undefined) updateData.htmlTemplate = htmlTemplate;
+    if (isActive !== undefined) updateData.isActive = isActive;
+    if (isDefault !== undefined) updateData.isDefault = isDefault;
+
+    await admin.firestore().collection('templates').doc(templateId).update(updateData);
+
+    res.json({ message: 'Template updated successfully' });
+  } catch (error) {
+    console.error('Error updating template:', error);
+    res.status(500).send(error.message || 'Không thể cập nhật template');
+  }
+});
+
+// Delete Template
+exports.deleteTemplate = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'DELETE') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    await verifyAdminToken(req);
+    const { templateId } = req.query;
+
+    if (!templateId) {
+      return res.status(400).send('templateId là bắt buộc');
+    }
+
+    await admin.firestore().collection('templates').doc(templateId).delete();
+
+    res.json({ message: 'Template deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting template:', error);
+    res.status(500).send(error.message || 'Không thể xóa template');
+  }
+});
+
+// ===================================
+// MAPPING MANAGEMENT APIs
+// ===================================
+
+// Get Mapping
+exports.getMapping = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'GET') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    await verifyAdminToken(req);
+    const { templateId } = req.query;
+
+    if (!templateId) {
+      return res.status(400).send('templateId là bắt buộc');
+    }
+
+    const mappingDoc = await admin.firestore().collection('mappings').doc(templateId).get();
+    
+    if (!mappingDoc.exists) {
+      // Trả về mapping rỗng nếu chưa có
+      return res.json({
+        templateId,
+        fields: {}
+      });
+    }
+
+    const data = mappingDoc.data();
+    res.json({
+      templateId: data.templateId || templateId,
+      fields: data.fields || {}
+    });
+  } catch (error) {
+    console.error('Error getting mapping:', error);
+    res.status(500).send(error.message || 'Không thể lấy mapping');
+  }
+});
+
+// Update Mapping
+exports.updateMapping = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'PUT') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    const claims = await verifyAdminToken(req);
+    const { templateId, fields } = req.body;
+
+    if (!templateId || !fields) {
+      return res.status(400).send('templateId và fields là bắt buộc');
+    }
+
+    await admin.firestore().collection('mappings').doc(templateId).set({
+      templateId,
+      fields,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedBy: claims.uid
+    }, { merge: true });
+
+    res.json({ message: 'Mapping updated successfully' });
+  } catch (error) {
+    console.error('Error updating mapping:', error);
+    res.status(500).send(error.message || 'Không thể cập nhật mapping');
+  }
+});
+
+// Export Mapping
+exports.exportMapping = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'GET') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    await verifyAdminToken(req);
+    const { templateId } = req.query;
+
+    if (!templateId) {
+      return res.status(400).send('templateId là bắt buộc');
+    }
+
+    const mappingDoc = await admin.firestore().collection('mappings').doc(templateId).get();
+    
+    if (!mappingDoc.exists) {
+      return res.status(404).send('Mapping không tồn tại');
+    }
+
+    const data = mappingDoc.data();
+    
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="mapping_${templateId}.json"`);
+    res.send(JSON.stringify({
+      templateId: data.templateId || templateId,
+      fields: data.fields || {}
+    }, null, 2));
+  } catch (error) {
+    console.error('Error exporting mapping:', error);
+    res.status(500).send(error.message || 'Không thể export mapping');
+  }
+});
+
+// Import Mapping
+exports.importMapping = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    const claims = await verifyAdminToken(req);
+    const { templateId, mappingData } = req.body;
+
+    if (!templateId || !mappingData || !mappingData.fields) {
+      return res.status(400).send('templateId và mappingData.fields là bắt buộc');
+    }
+
+    await admin.firestore().collection('mappings').doc(templateId).set({
+      templateId,
+      fields: mappingData.fields,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedBy: claims.uid
+    });
+
+    res.json({ message: 'Mapping imported successfully' });
+  } catch (error) {
+    console.error('Error importing mapping:', error);
+    res.status(500).send(error.message || 'Không thể import mapping');
+  }
+});
+
 module.exports = {
   verifyAdminToken,
   admin

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm 15mm;
+    }
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt;
+      line-height: 1.4;
+      color: #000;
+    }
+    .header {
+      text-align: center;
+      font-weight: bold;
+      font-size: 16pt;
+      margin-bottom: 10pt;
+      text-transform: uppercase;
+    }
+    .form-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11pt;
+      margin-bottom: 15pt;
+      padding-bottom: 10pt;
+      border-bottom: 1px solid #000;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15pt 0;
+      font-size: 11pt;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 6pt;
+      text-align: left;
+    }
+    th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+      text-align: center;
+    }
+    .total {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 10pt;
+      font-size: 13pt;
+      padding: 5pt;
+      border-top: 2px solid #000;
+    }
+    .signature {
+      margin-top: 30pt;
+      display: flex;
+      justify-content: space-between;
+    }
+    .signature-box {
+      width: 30%;
+      text-align: center;
+      border-top: 1px solid #000;
+      padding-top: 5pt;
+      font-size: 11pt;
+    }
+    .footer-note {
+      font-size: 10pt;
+      color: #555;
+      margin-top: 20pt;
+      text-align: center;
+    }
+    .info-row {
+      margin: 8pt 0;
+      font-size: 11pt;
+    }
+    .info-label {
+      font-weight: bold;
+      display: inline-block;
+      width: 150pt;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">GIẤY NỘP TIỀN VÀO NGÂN SÁCH NHÀ NƯỚC</div>
+
+  <div class="form-meta">
+    <div><strong>Mẫu số:</strong> 02</div>
+    <div><strong>Ký hiệu:</strong> C1-02/NS</div>
+    <div><strong>Mã hiệu:</strong> TCS0101/25</div>
+    <div><strong>Số:</strong> {{formNumber}}</div>
+  </div>
+
+  <div class="info-row">
+    <span class="info-label">Người nộp thuế:</span>
+    <span>{{taxpayerName}}</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">Địa chỉ:</span>
+    <span>{{taxpayerAddress}}</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">Đề nghị NH:</span>
+    <span>{{bankName}}</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">Vào tài khoản KBNN:</span>
+    <span>{{kbnnBranch}}</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">Tên cơ quan quản lý thu:</span>
+    <span>{{agencyName}}</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Số tờ khai / QĐ</th>
+        <th>Kỳ thuế / Ngày QĐ</th>
+        <th>Nội dung các khoản nộp NSNN</th>
+        <th>Số tiền VND</th>
+        <th>Mã chương</th>
+        <th>Mã tiểu mục</th>
+        <th>Mã ĐBHC</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each details}}
+      <tr>
+        <td style="text-align: center;">{{stt}}</td>
+        <td>{{taxFormNumber}}</td>
+        <td>{{taxPeriod}}</td>
+        <td>{{description}}</td>
+        <td style="text-align: right;">{{amountVND}}</td>
+        <td style="text-align: center;">{{chapterCode}}</td>
+        <td style="text-align: center;">{{subChapterCode}}</td>
+        <td style="text-align: center;">{{dbhcCode}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="total">Tổng cộng: {{totalAmountInWords}}</div>
+
+  <div class="signature">
+    <div class="signature-box">
+      <p>Người nộp tiền</p>
+      <p>{{signatures.taxpayer.name}}</p>
+      <p style="font-size: 10pt; margin-top: 10pt;">{{signatures.taxpayer.date}}</p>
+    </div>
+    <div class="signature-box">
+      <p>Ngân hàng</p>
+      <p>{{signatures.bank.name}}</p>
+      <p style="font-size: 10pt; margin-top: 10pt;">{{signatures.bank.date}}</p>
+    </div>
+    <div class="signature-box">
+      <p>Cơ quan Thuế</p>
+      <p>{{signatures.taxOffice.name}}</p>
+      <p style="font-size: 10pt; margin-top: 10pt;">{{signatures.taxOffice.date}}</p>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Đây là bản sao điện tử. Không cần đóng dấu.
+  </div>
+
+</body>
+</html>
+
