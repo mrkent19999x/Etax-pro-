@@ -195,6 +195,7 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 /* Phone Frame Structure - matches project gốc */
@@ -264,6 +265,11 @@ body {
   background-color: var(--etax-header, #8f1015);
   color: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Utility: safe area top padding for headers on devices with notch */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0);
 }
 
 @layer utilities {

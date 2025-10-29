@@ -4,7 +4,7 @@
   "description": "eTax Mobile Application for Vietnamese Tax Management",
   "start_url": "/",
   "scope": "/",
-  "display": "fullscreen",
+  "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#ffffff",
   "theme_color": "#cc0000",
