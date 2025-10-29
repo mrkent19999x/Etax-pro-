@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Menu, Bell, QrCode, ChevronRight } from "lucide-react"
+import { Menu, Bell, QrCode } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { Sidebar } from "@/components/sidebar"
@@ -47,8 +47,6 @@ export default function EtaxMobileHome() {
     { id: 2, icon: "icon2.png", label: "Hồ sơ đăng ký thuế", href: "/ho-so-dang-ky-thue" },
     { id: 3, icon: "icon3.png", label: "Hồ sơ quyết toán thuế", href: "/ho-so-quyet-toan-thue" },
     { id: 4, icon: "icon4.png", label: "Tra cứu chứng từ thuế", href: "/tra-cuu-chung-tu" },
-    { id: 5, icon: "kt1.png", label: "Khai thuế CNKD", href: "/khai-thue" },
-    { id: 6, icon: "hs1.png", label: "Tra cứu hồ sơ khai thuế", href: "/tra-cuu-chung-tu" },
   ]
 
   const services = [
@@ -93,11 +91,13 @@ export default function EtaxMobileHome() {
             </div>
             <div className="flex-1">
               <p className="text-gray-600 text-sm">MST: 00109202830</p>
-              <p className="text-[#DC143C] font-bold text-lg">TỬ XUÂN CHIẾN</p>
+              <div className="flex items-center gap-2">
+                <p className="text-[#DC143C] font-bold text-lg">TỬ XUÂN CHIẾN</p>
+                <Link href="/thong-tin-tai-khoan" className="flex-shrink-0 hover:opacity-80 transition-opacity">
+                  <Image src="/assets/nutha.png" alt="Navigate to account" width={20} height={20} className="object-contain" />
+                </Link>
+              </div>
             </div>
-            <Link href="/thong-tin-tai-khoan">
-              <ChevronRight className="w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" />
-            </Link>
           </div>
 
           {/* Frequently Used Features */}
