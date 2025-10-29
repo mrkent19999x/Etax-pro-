@@ -61,7 +61,6 @@ async function verifyAdminToken(req) {
 
   return decodedToken;
 }
-}
 
 // Empty function for testing
 exports.test = functions.https.onRequest((req, res) => {
