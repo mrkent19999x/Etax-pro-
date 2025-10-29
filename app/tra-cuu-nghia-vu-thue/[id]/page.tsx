@@ -1,4 +1,7 @@
+"use client"
+
 import { DetailHeader } from "@/components/detail-header"
+import { useBodyLock } from "@/hooks/use-body-lock"
 
 // Mock data for obligation details
 const obligationDetails: Record<string, any> = {
@@ -56,10 +59,11 @@ const obligationDetails: Record<string, any> = {
 }
 
 export default function ObligationDetailPage({ params }: { params: { id: string } }) {
+  useBodyLock(true)
   const detail = obligationDetails[params.id] || obligationDetails["1"]
 
   return (
-    <div className="min-h-screen full-viewport bg-gray-100 flex flex-col">
+    <div className="h-full bg-gray-100 flex flex-col">
       <DetailHeader title="Thông tin chi tiết" />
 
       <div className="flex-1 overflow-y-auto pb-6">

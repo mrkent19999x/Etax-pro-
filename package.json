@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "lint": "eslint .",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "start": "next start",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -70,6 +70,8 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.38.0",
+    "eslint-config-next": "^16.0.1",
     "playwright": "^1.56.1",
     "postcss": "^8.5",
     "tailwindcss": "^4.1.9",

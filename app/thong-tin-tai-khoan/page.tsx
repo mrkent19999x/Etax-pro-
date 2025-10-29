@@ -3,27 +3,22 @@
 import { ChevronLeft, Home, Edit, QrCode, Lock, Trash2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { etaxHeaderStyle } from "@/components/header-style"
+import { useBodyLock } from "@/hooks/use-body-lock"
 
 export default function AccountInfoPage() {
   const router = useRouter()
+  useBodyLock(true)
 
   return (
-    <div 
-      className="phone-frame relative min-h-screen"
-      style={{ 
-        backgroundImage: "url('/assets/sidebar/nen.png')", 
-        backgroundSize: 'cover', 
-        backgroundPosition: 'center', 
-        backgroundRepeat: 'no-repeat'
-      }}
+    <div
+      className="phone-frame relative"
+      style={{ backgroundImage: "url('/assets/sidebar/nen.png')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}
     >
       {/* Header */}
-      <header
-        className="bg-[#b71c1c] px-6 py-4 flex items-center justify-between"
-        style={{ paddingTop: "max(12px, env(safe-area-inset-top, 0px))", height: "100px", boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}
-      >
+      <header className="etax-header px-6 py-4 flex items-center justify-between text-white" style={etaxHeaderStyle}>
         <button onClick={() => router.back()} className="hover:opacity-80 transition-opacity">
-          <ChevronLeft className="w-6 h-6 text-white" />
+          <ChevronLeft className="w-6 h-6" />
         </button>
         <h1 className="text-white font-light text-lg">Thông tin tài khoản</h1>
         <Link href="/">
@@ -32,7 +27,7 @@ export default function AccountInfoPage() {
       </header>
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 pb-20">
+      <div className="flex-1 overflow-y-auto px-4 py-6">
         {/* Profile Section */}
         <div className="bg-gray-700 px-6 py-8 flex flex-col items-center gap-6">
           {/* Avatar */}
@@ -64,7 +59,7 @@ export default function AccountInfoPage() {
         </div>
 
         {/* Account Information */}
-        <div className="mx-auto bg-white rounded-2xl px-6 py-6 shadow-sm mb-6" style={{ maxWidth: "355px" }}>
+        <div className="mx-auto bg-white rounded-2xl px-6 py-6 shadow-sm mb-6" style={{ maxWidth: "355px", marginBottom: "calc(24px + env(safe-area-inset-bottom, 0px))" }}>
           <h2 className="text-lg font-bold text-gray-800 mb-6">Thông tin tài khoản</h2>
 
           <div className="space-y-6">

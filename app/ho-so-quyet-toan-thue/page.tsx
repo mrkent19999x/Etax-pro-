@@ -12,7 +12,7 @@ export default function HoSoQuyetToanThuePage() {
   ]
   return (
     <ProtectedView>
-      <div className="min-h-screen full-viewport bg-gray-100 flex flex-col">
+      <div className="h-full bg-gray-100 flex flex-col">
         <DetailHeader title="Hồ sơ quyết toán thuế" />
 
         <div className="flex-1 overflow-y-auto px-4 py-6">

@@ -7,12 +7,18 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: 1, // Chỉ 1 worker
   reporter: 'html',
+  timeout: 30000, // Global timeout 30 giây cho mỗi test
+  expect: {
+    timeout: 10000, // Timeout cho các assertions
+  },
   
   use: {
-    baseURL: 'http://localhost:3003',
+    baseURL: 'http://localhost:3001',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    navigationTimeout: 15000, // Timeout cho page navigation
+    actionTimeout: 10000, // Timeout cho các actions (click, fill, etc.)
   },
 
   projects: [

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useState } from "react"
 import { ProtectedView } from "@/components/protected-view"
+import { etaxHeaderStyle } from "@/components/header-style"
 
 export default function DoiMatKhauPage() {
   const router = useRouter()
@@ -49,14 +50,11 @@ export default function DoiMatKhauPage() {
   }
   return (
     <ProtectedView>
-      <div className="min-h-screen full-viewport bg-gray-100 flex flex-col">
+      <div className="h-full bg-gray-100 flex flex-col">
         {/* Header */}
-      <div
-        className="bg-red-700 px-6 py-4 flex items-center justify-between"
-        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 1rem)" }}
-      >
+        <div className="etax-header px-6 py-4 flex items-center justify-between text-white" style={etaxHeaderStyle}>
           <button onClick={() => router.back()} className="hover:opacity-80 transition-opacity">
-            <ChevronLeft className="w-6 h-6 text-white" />
+            <ChevronLeft className="w-6 h-6" />
           </button>
           <h1 className="text-white font-light text-lg">Đổi mật khẩu</h1>
           <Link href="/">

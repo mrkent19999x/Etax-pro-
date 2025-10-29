@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { ChevronLeft, Home, Bell } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { etaxHeaderStyle } from "./header-style"
 
 interface PageHeaderProps {
   title: string
@@ -13,14 +14,7 @@ export function PageHeader({ title, showNotification = true }: PageHeaderProps) 
   const router = useRouter()
 
   return (
-    <header 
-      className="sticky top-0 z-50 bg-[#b71c1c] text-white px-4 py-3 flex items-center justify-between"
-      style={{ 
-        height: "100px",
-        paddingTop: "max(12px, env(safe-area-inset-top, 0px))",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
-      }}
-    >
+    <header className="etax-header sticky top-0 z-50 flex items-center justify-between px-6 py-4 text-white" style={etaxHeaderStyle}>
       <button onClick={() => router.back()} className="p-2 hover:opacity-80 transition">
         <ChevronLeft size={24} />
       </button>

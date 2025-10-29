@@ -3,6 +3,7 @@
 import type { ReactNode } from "react"
 
 import { useAuthGuard } from "@/lib/auth-guard"
+import { useBodyLock } from "@/hooks/use-body-lock"
 
 interface ProtectedViewProps {
   children: ReactNode
@@ -14,6 +15,7 @@ interface ProtectedViewProps {
  */
 export function ProtectedView({ children, fallback }: ProtectedViewProps) {
   const { isAuthenticated, isChecking } = useAuthGuard()
+  useBodyLock(true)
 
   if (isChecking) {
     return (

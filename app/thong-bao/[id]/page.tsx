@@ -2,9 +2,11 @@
 
 import { DetailHeader } from "@/components/detail-header"
 import { useParams } from "next/navigation"
+import { useBodyLock } from "@/hooks/use-body-lock"
 
 export default function NotificationDetailPage() {
   const params = useParams()
+  useBodyLock(true)
   const id = params.id
 
   const notificationDetails: Record<string, { title: string; date: string; content: string }> = {
@@ -30,7 +32,7 @@ export default function NotificationDetailPage() {
   const notification = notificationDetails[id as string] || notificationDetails["1"]
 
   return (
-    <div className="min-h-screen full-viewport bg-gray-100 flex flex-col">
+    <div className="h-full bg-gray-100 flex flex-col">
       <DetailHeader title="Chi tiết thông báo" />
 
       {/* Notification Detail Content */}

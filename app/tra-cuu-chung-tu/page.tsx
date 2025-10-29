@@ -46,7 +46,7 @@ export default function TraCuuChungTuPage() {
 
   return (
     <ProtectedView>
-      <div className="min-h-screen full-viewport bg-gray-800 flex flex-col">
+      <div className="h-full bg-gray-800 flex flex-col">
         <DetailHeader title="Tra cứu chứng từ" />
 
         {/* Content */}
