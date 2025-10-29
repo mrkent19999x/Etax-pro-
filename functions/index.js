@@ -61,6 +61,7 @@ async function verifyAdminToken(req) {
 
   return decodedToken;
 }
+}
 
 // Empty function for testing
 exports.test = functions.https.onRequest((req, res) => {
@@ -575,16 +576,18 @@ exports.generatePdf = functions.https.onRequest(async (req, res) => {
     const template = handlebars.compile(htmlTemplate);
     const html = template(finalData);
 
-    // Launch Puppeteer
+    // Launch Puppeteer with optimized config
     browser = await puppeteer.launch({
       headless: 'new',
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
-        '--disable-gpu'
+        '--disable-gpu',
+        '--disable-software-rasterizer',
+        '--disable-extensions'
       ],
-      timeout: 30000
+      timeout: 60000 // Increase timeout for slow connections
     });
 
     const page = await browser.newPage();
@@ -611,9 +614,18 @@ exports.generatePdf = functions.https.onRequest(async (req, res) => {
 
   } catch (error) {
     if (browser) {
-      await browser.close();
+      try {
+        await browser.close();
+      } catch (closeError) {
+        console.error('Error closing browser:', closeError);
+      }
     }
-    console.error('Error generating PDF:', error);
+    console.error('Error generating PDF:', {
+      mst,
+      templateId: finalTemplateId,
+      error: error.message,
+      stack: error.stack
+    });
     res.status(500).send(error.message || 'Không thể tạo PDF. Vui lòng thử lại sau.');
   }
 });
