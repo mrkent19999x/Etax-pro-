@@ -70,7 +70,7 @@ export default function EtaxMobileHome() {
           <button onClick={() => setSidebarOpen(true)} className="hover:opacity-80 transition-opacity">
             <Menu className="w-6 h-6 cursor-pointer" />
           </button>
-          <div className="flex flex-col items-center">
+          <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
             <Image src="/assets/logo.webp" alt="Logo" width={48} height={48} className="mb-1" />
             <h1 className="font-light text-lg">eTax Mobile</h1>
           </div>

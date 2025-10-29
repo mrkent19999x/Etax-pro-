@@ -50,8 +50,8 @@ export default function TraCuuChungTuPage() {
         <DetailHeader title="Tra cứu chứng từ" />
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto bg-gray-100 px-6 py-6">
-          <div className="bg-white rounded-lg p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto bg-white">
+          <div className="px-4 py-6 space-y-6">
             {/* Reference Code */}
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">Mã tham chiếu</label>
@@ -114,37 +114,105 @@ export default function TraCuuChungTuPage() {
             {/* Results Table */}
             {searched && hasResults && (
               <div className="space-y-4">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm border-collapse">
-                    <thead>
-                      <tr className="border-b-2 border-gray-300">
-                        <th className="text-left py-3 px-2 font-semibold text-gray-700">Mã tham chiếu</th>
-                        <th className="text-left py-3 px-2 font-semibold text-gray-700">Số tiền</th>
-                        <th className="text-left py-3 px-2 font-semibold text-gray-700">Ngày nộp</th>
-                        <th className="text-left py-3 px-2 font-semibold text-gray-700">Trạng thái</th>
-                        <th className="text-center py-3 px-2 font-semibold text-gray-700">In chứng từ</th>
+                <table className="w-full border-collapse" style={{ fontFamily: "'Roboto', 'Helvetica Neue', Arial, sans-serif" }}>
+                  <thead>
+                    <tr>
+                      <th className="w-[25%] text-left font-semibold text-[14px] border border-[#d9d9d9] bg-[#f5f5f5] text-[#333333]" style={{ fontWeight: 600, letterSpacing: '0.2px', padding: '8px 12px' }}>
+                        Mã tham chiếu
+                      </th>
+                      <th className="w-[15%] text-right font-semibold text-[14px] border border-[#d9d9d9] bg-[#f5f5f5] text-[#333333]" style={{ fontWeight: 600, letterSpacing: '0.2px', padding: '8px 12px' }}>
+                        Số tiền
+                      </th>
+                      <th className="w-[20%] text-center font-semibold text-[14px] border border-[#d9d9d9] bg-[#f5f5f5] text-[#333333]" style={{ fontWeight: 600, letterSpacing: '0.2px', padding: '8px 12px' }}>
+                        Ngày nộp
+                      </th>
+                      <th className="w-[30%] text-left font-semibold text-[14px] border border-[#d9d9d9] bg-[#f5f5f5] text-[#333333]" style={{ fontWeight: 600, letterSpacing: '0.2px', padding: '8px 12px' }}>
+                        Trạng thái
+                      </th>
+                      <th className="w-[10%] text-center font-semibold text-[14px] border border-[#d9d9d9] bg-[#f5f5f5] text-[#333333]" style={{ fontWeight: 600, letterSpacing: '0.2px', padding: '8px 12px' }}>
+                        In chứng từ
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mockResults.map((result) => (
+                      <tr key={result.id} className="hover:bg-[#f0f8ff] transition-colors duration-200" style={{ minHeight: '40px' }}>
+                        {/* Cột 1: Mã tham chiếu - 3 dòng (110202, 50044, 818128) */}
+                        <td className="text-left text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
+                          padding: '8px 12px', 
+                          whiteSpace: 'normal', 
+                          lineHeight: '1.4', 
+                          wordBreak: 'break-word',
+                          letterSpacing: '0.2px',
+                          fontWeight: 400
+                        }}>
+                          {result.maThamChieu.slice(0, 6)}
+                          <br />
+                          {result.maThamChieu.slice(6, 11)}
+                          <br />
+                          {result.maThamChieu.slice(11)}
+                        </td>
+                        
+                        {/* Cột 2: Số tiền - căn phải */}
+                        <td className="text-right text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
+                          padding: '8px 12px',
+                          letterSpacing: '0.2px',
+                          fontWeight: 400
+                        }}>
+                          {result.soTien}
+                        </td>
+                        
+                        {/* Cột 3: Ngày nộp - căn giữa */}
+                        <td className="text-center text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
+                          padding: '8px 12px',
+                          letterSpacing: '0.2px',
+                          fontWeight: 400
+                        }}>
+                          {result.ngayNop}
+                        </td>
+                        
+                        {/* Cột 4: Trạng thái - wrap tự động */}
+                        <td className="text-left text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
+                          padding: '8px 12px', 
+                          whiteSpace: 'normal', 
+                          lineHeight: '1.4', 
+                          wordBreak: 'break-word',
+                          letterSpacing: '0.2px',
+                          fontWeight: 400
+                        }}>
+                          {result.trangThai}
+                        </td>
+                        
+                        {/* Cột 5: In chứng từ - Radio button */}
+                        <td className="text-center border border-[#d9d9d9] bg-white align-middle" style={{ padding: '8px 12px' }}>
+                          <button
+                            onClick={() => handlePrintClick(result)}
+                            className="inline-flex items-center justify-center w-4 h-4 rounded-full border-2 border-[#e60000] hover:opacity-80 transition-opacity"
+                            style={{ 
+                              width: '16px', 
+                              height: '16px',
+                              border: '2px solid #e60000',
+                              borderRadius: '50%',
+                              position: 'relative'
+                            }}
+                          >
+                            <span 
+                              className="absolute rounded-full"
+                              style={{
+                                top: '3px',
+                                left: '3px',
+                                width: '8px',
+                                height: '8px',
+                                backgroundColor: '#e60000',
+                                borderRadius: '50%'
+                              }}
+                            />
+                          </button>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {mockResults.map((result) => (
-                        <tr key={result.id} className="border-b border-gray-200 hover:bg-gray-50">
-                          <td className="py-3 px-2 text-gray-700">{result.maThamChieu}</td>
-                          <td className="py-3 px-2 text-gray-700">{result.soTien}</td>
-                          <td className="py-3 px-2 text-gray-700">{result.ngayNop}</td>
-                          <td className="py-3 px-2 text-gray-700 text-xs">{result.trangThai}</td>
-                          <td className="py-3 px-2 text-center">
-                            <button
-                              onClick={() => handlePrintClick(result)}
-                              className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-red-600 hover:bg-red-50 transition-colors"
-                            >
-                              <div className="w-3 h-3 rounded-full bg-red-600" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
 
                 {/* Print Button */}
                 <button
