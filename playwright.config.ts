@@ -13,7 +13,7 @@ export default defineConfig({
   },
   
   use: {
-    baseURL: 'http://localhost:3001',
+    baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -31,10 +31,10 @@ export default defineConfig({
     },
   ],
 
-  // Tắt webServer auto-start, dùng server riêng
+  // Tắt webServer auto-start, dùng server riêng (npm run dev ở terminal khác)
   // webServer: {
   //   command: 'npm run dev',
-  //   url: 'http://localhost:3000',
+  //   url: 'http://localhost:3001',
   //   reuseExistingServer: !process.env.CI,
   //   timeout: 120 * 1000,
   // },

@@ -12,24 +12,25 @@ test.describe('Home Page Navigation', () => {
   });
 
   test('Sidebar - Should open and close', async ({ page }) => {
-    // Click menu icon
-    await page.click('button svg.lucide-menu');
+    // Click menu icon (button chứa Menu icon)
+    await page.locator('button:has(svg)').first().click();
     
-    // Check sidebar is visible
-    await expect(page.locator('text=TỬ XUÂN CHIẾN')).toBeVisible();
+    // Check sidebar is visible (text trong Sidebar component)
+    await expect(page.locator('text=TỬ XUÂN CHIẾN').or(page.locator('text=TỪ XUÂN CHIẾN'))).toBeVisible({ timeout: 5000 });
     
     // Click overlay to close
     await page.click('div.fixed.inset-0.bg-black\\/50');
     
     // Sidebar should be hidden
-    await expect(page.locator('text=TỬ XUÂN CHIẾN')).not.toBeVisible({ timeout: 1000 });
+    await expect(page.locator('text=TỬ XUÂN CHIẾN').or(page.locator('text=TỪ XUÂN CHIẾN'))).not.toBeVisible({ timeout: 1000 });
   });
 
   test('Sidebar Navigation - Click Khai thuế menu item', async ({ page }) => {
     // Open sidebar
-    await page.click('button svg.lucide-menu');
+    await page.locator('button:has(svg)').first().click();
+    await page.waitForTimeout(500);
     
-    // Click "Khai thuế"
+    // Click "Khai thuế" trong sidebar
     await page.click('a[href="/khai-thue"]');
     
     // Should navigate to /khai-thue
@@ -53,8 +54,8 @@ test.describe('Home Page Navigation', () => {
   });
 
   test('Service Grid - Click Tra cứu thông báo', async ({ page }) => {
-    // Click service icon "Tra cứu thông báo"
-    await page.click('div.grid div.flex.flex-col:has-text("Tra cứu thông báo")');
+    // Click service icon "Tra cứu thông báo" - tìm link hoặc div có text này
+    await page.locator('a[href="/thong-bao"], div:has-text("Tra cứu thông báo")').first().click();
     
     // Should navigate to /thong-bao
     await page.waitForLoadState('networkidle');
@@ -62,8 +63,8 @@ test.describe('Home Page Navigation', () => {
   });
 
   test('Profile Card - Click should navigate to account page', async ({ page }) => {
-    // Click chevron icon trong profile card
-    await page.click('a[href="/thong-tin-tai-khoan"] svg.lucide-chevron-right');
+    // Click link trong profile card (Image có alt="Navigate to account")
+    await page.locator('a[href="/thong-tin-tai-khoan"]').first().click();
     
     // Should navigate to account page
     await page.waitForLoadState('networkidle');
