@@ -25,3 +25,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# debug logs
+*.log
+dataconnect-debug.log
+pglite-debug.log
+
+# test results
+test-results/
+playwright-report/
+
+# temp files
+temp_*
+*.plan.md
+
+# IDE
+*.code-workspace
+.vscode/settings.json
+
+# build artifacts
+.firebase/
+dist/

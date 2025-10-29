@@ -89,7 +89,9 @@ export function Sidebar({ isOpen, onClose, userName = "TỪ XUÂN CHIẾN" }: Si
           </button>
           
           {/* Logo */}
-          <Image src="/assets/logo.webp" alt="Logo" width={130} height={130} className="mb-0 mt-5" />
+          <div className="flex justify-center items-center w-full mt-5 mb-0">
+            <Image src="/assets/logo.webp" alt="Logo" width={130} height={130} />
+          </div>
           
           {/* Greeting Box */}
           <div 
@@ -102,8 +104,9 @@ export function Sidebar({ isOpen, onClose, userName = "TỪ XUÂN CHIẾN" }: Si
               margin: 0
             }}
           >
-            <div>Xin chào</div>
-            <div style={{ fontSize: "24px", fontWeight: "bold", marginTop: "5px" }}>{displayName}</div>
+            <div style={{ fontSize: "22px", fontWeight: 600, lineHeight: 1.3 }}>
+              Xin chào <span style={{ fontSize: "24px", fontWeight: "bold" }}>{displayName?.toLowerCase() || "từ xuân chiến"}</span>
+            </div>
           </div>
         </div>
 
@@ -111,56 +114,56 @@ export function Sidebar({ isOpen, onClose, userName = "TỪ XUÂN CHIẾN" }: Si
         <div className="flex-1 overflow-y-auto bg-white px-0 py-0" style={{ maxHeight: "calc(100dvh - 327px)" }}>
           <nav className="space-y-0">
             <button onClick={() => handleMenuClick("/")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/trangchu.png" alt="Trang chủ" width={32} height={32} />
-              <span className="font-medium text-sm">Trang chủ</span>
+              <Image src="/assets/trangchu.png" alt="Trang chủ" width={36} height={36} />
+              <span className="font-medium text-base">Trang chủ</span>
             </button>
             <button onClick={() => handleMenuClick("/hoa-don-dien-tu")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/index1.png" alt="Hoá đơn điện tử" width={32} height={32} />
-              <span className="font-medium text-sm">Hoá đơn điện tử</span>
+              <Image src="/assets/index1.png" alt="Hoá đơn điện tử" width={36} height={36} />
+              <span className="font-medium text-base">Hoá đơn điện tử</span>
             </button>
             <button onClick={() => handleMenuClick("/khai-thue")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon5.png" alt="Khai thuế" width={32} height={32} />
-              <span className="font-medium text-sm">Khai thuế</span>
+              <Image src="/assets/icon5.png" alt="Khai thuế" width={36} height={36} />
+              <span className="font-medium text-base">Khai thuế</span>
             </button>
             <button onClick={() => handleMenuClick("/dang-ky-thue")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon5.png" alt="Đăng ký thuế" width={32} height={32} />
-              <span className="font-medium text-sm">Đăng ký thuế</span>
+              <Image src="/assets/icon5.png" alt="Đăng ký thuế" width={36} height={36} />
+              <span className="font-medium text-base">Đăng ký thuế</span>
             </button>
             <button onClick={() => handleMenuClick("/ho-tro-quyet-toan")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon6.png" alt="Hỗ trợ quyết toán thuế TNCN" width={32} height={32} />
-              <span className="font-medium text-sm">Hỗ trợ quyết toán thuế TNCN</span>
+              <Image src="/assets/icon6.png" alt="Hỗ trợ quyết toán thuế TNCN" width={36} height={36} />
+              <span className="font-medium text-base">Hỗ trợ quyết toán thuế TNCN</span>
             </button>
             <button onClick={() => handleMenuClick("/nhom-chuc-nang-nop-thue")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon7.png" alt="Nhóm chức năng nộp thuế" width={32} height={32} />
-              <span className="font-medium text-sm">Nhóm chức năng nộp thuế</span>
+              <Image src="/assets/icon7.png" alt="Nhóm chức năng nộp thuế" width={36} height={36} />
+              <span className="font-medium text-base">Nhóm chức năng nộp thuế</span>
             </button>
             <button onClick={() => handleMenuClick("/tra-cuu-nghia-vu-thue")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon8.png" alt="Tra cứu nghĩa vụ thuế" width={32} height={32} />
-              <span className="font-medium text-sm">Tra cứu nghĩa vụ thuế</span>
+              <Image src="/assets/icon8.png" alt="Tra cứu nghĩa vụ thuế" width={36} height={36} />
+              <span className="font-medium text-base">Tra cứu nghĩa vụ thuế</span>
             </button>
             <button onClick={() => handleMenuClick("/thong-bao")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon9.png" alt="Tra cứu thông báo" width={32} height={32} />
-              <span className="font-medium text-sm">Tra cứu thông báo</span>
+              <Image src="/assets/icon9.png" alt="Tra cứu thông báo" width={36} height={36} />
+              <span className="font-medium text-base">Tra cứu thông báo</span>
             </button>
             <button onClick={() => handleMenuClick("/tien-ich")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon10.png" alt="Tiện ích" width={32} height={32} />
-              <span className="font-medium text-sm">Tiện ích</span>
+              <Image src="/assets/icon10.png" alt="Tiện ích" width={36} height={36} />
+              <span className="font-medium text-base">Tiện ích</span>
             </button>
             <button onClick={() => handleMenuClick("/ho-tro")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon11.png" alt="Hỗ trợ" width={32} height={32} />
-              <span className="font-medium text-sm">Hỗ trợ</span>
+              <Image src="/assets/icon11.png" alt="Hỗ trợ" width={36} height={36} />
+              <span className="font-medium text-base">Hỗ trợ</span>
             </button>
             <button onClick={() => handleMenuClick("/thiet-lap-ca-nhan")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon12.png" alt="Thiết lập cá nhân" width={32} height={32} />
-              <span className="font-medium text-sm">Thiết lập cá nhân</span>
+              <Image src="/assets/icon12.png" alt="Thiết lập cá nhân" width={36} height={36} />
+              <span className="font-medium text-base">Thiết lập cá nhân</span>
             </button>
             <button onClick={() => handleMenuClick("/doi-mat-khau")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/icon-doimk.png" alt="Đổi mật khẩu" width={32} height={32} />
-              <span className="font-medium text-sm">Đổi mật khẩu đăng nhập</span>
+              <Image src="/assets/icon-doimk.png" alt="Đổi mật khẩu" width={36} height={36} />
+              <span className="font-medium text-base">Đổi mật khẩu đăng nhập</span>
             </button>
             <button onClick={() => handleMenuClick("/van-tay")} className="w-full flex items-center gap-4 px-5 py-4 text-gray-800 hover:bg-gray-50 border-b border-gray-100 transition-colors text-left">
-              <Image src="/assets/faceid.png" alt="FaceID" width={32} height={32} />
-              <span className="font-medium text-sm">Đăng nhập bằng vân tay / FaceID</span>
+              <Image src="/assets/faceid.png" alt="FaceID" width={36} height={36} />
+              <span className="font-medium text-base">Đăng nhập bằng vân tay / FaceID</span>
             </button>
           </nav>
         </div>
@@ -172,7 +175,7 @@ export function Sidebar({ isOpen, onClose, userName = "TỪ XUÂN CHIẾN" }: Si
         >
           <button
             onClick={handleLogout}
-            className="w-full py-4 px-5 bg-gradient-to-br from-[#b71c1c] to-[#d32f2f] text-white rounded-[25px] font-bold text-sm cursor-pointer shadow-[0_4px_8px_rgba(183,28,28,0.3)] transition-transform hover:scale-[0.98]"
+            className="w-full py-4 px-5 bg-gradient-to-br from-[#b71c1c] to-[#d32f2f] text-white rounded-[25px] font-bold text-base cursor-pointer shadow-[0_4px_8px_rgba(183,28,28,0.3)] transition-transform hover:scale-[0.98]"
           >
             Đăng xuất
           </button>

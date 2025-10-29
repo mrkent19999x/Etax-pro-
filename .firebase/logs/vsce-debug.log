@@ -80,3 +80,207 @@ I1029 03:57:00.176654   31783 dev.go:102] Listening on address (HTTP + gRPC): 12
 [debug] [2025-10-28T21:15:24.341Z] I1029 04:15:24.341696   31783 engine.go:169] [/emulator/v0etaxmobileloginmain-fixed-2 787b] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 04:15:24.341696   31783 engine.go:169] [/emulator/v0etaxmobileloginmain-fixed-2 787b] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}
 [debug] [2025-10-28T21:23:13.676Z] [Firebase Plugin] Received emulators shutdown notification.
+[info] [Firebase Plugin] Stopping Data Connect toolkit
+[warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 
+[debug] [2025-10-29T00:51:35.571Z] [Firebase Plugin] Activating Firebase extension.
+[info] [Firebase Plugin] Checked firebase-tools, is up to date!
+[debug] [2025-10-29T00:52:18.360Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-10-29T00:52:18.375Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-29T00:52:18.376Z] > authorizing via signed-in user (begau1302@gmail.com)
+[debug] [2025-10-29T00:52:18.422Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T00:52:18.428Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T00:52:18.432Z] [Firebase Plugin] User found:  begau1302@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-10-29T00:52:18.434Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T00:52:18.453Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-10-29T00:52:18.581Z] [Firebase Plugin] VSCode notification server listening on port 40003
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.15.0) on port 50001
+[debug] [2025-10-29T00:52:25.189Z] I1029 07:52:25.013854  162630 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 70ec] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/mutations.gql [1243B] example/queries.gql [1801B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 07:52:25.013854  162630 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 70ec] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1992B] \nConnector \"example\": sources: example/mutations.gql [1243B] example/queries.gql [1801B] \n"}}
+[debug] [2025-10-29T00:52:25.213Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-10-29T00:52:25.225Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-10-29T00:52:25.230Z] Starting Data Connect Emulator with command {"binary":"/home/mrkent/.cache/firebase/emulators/dataconnect-emulator-2.15.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/mrkent/etax-project/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/mrkent/.cache/firebase/emulators/dataconnect-emulator-2.15.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/mrkent/etax-project/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-10-29T00:52:26.179Z] I1029 07:52:25.492646  162653 load.go:31] Reloading schema and connectors...
+I1029 07:52:26.024641  162653 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 91f4] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/mutations.gql [1243B] example/queries.gql [1801B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 07:52:25.492646  162653 load.go:31] Reloading schema and connectors...\nI1029 07:52:26.024641  162653 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 91f4] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1992B] \nConnector \"example\": sources: example/mutations.gql [1243B] example/queries.gql [1801B] \n"}}
+[debug] [2025-10-29T00:52:26.652Z] I1029 07:52:26.384323  162653 codegen.go:82] [connector "example" javascriptSdk] Generating sources into "/home/mrkent/etax-project/src/dataconnect-generated"
+I1029 07:52:26.430410  162653 collector.go:107] schema extensions wrote into "/home/mrkent/etax-project/dataconnect/.dataconnect/schema"
+Generated sources: main/input.gql [28173B] main/relation.gql [13746B] main/query.gql [5099B] main/mutation.gql [13679B] prelude.gql [73219B] main/implicit.gql [1261B] 
+I1029 07:52:26.431748  162653 collector.go:107] connector "example" javascriptSdk wrote into "/home/mrkent/etax-project/src/dataconnect-generated"
+Generated sources: index.cjs.js [4069B] package.json [863B] react/index.d.ts [3961B] react/esm/package.json [17B] react/index.cjs.js [3439B] react/README.md [48299B] index.d.ts [8025B] README.md [40931B] react/package.json [460B] react/esm/index.esm.js [3269B] .guides/usage.md [3489B] .guides/setup.md [1682B] esm/index.esm.js [3579B] esm/package.json [17B] 
+I1029 07:52:26.438159  162653 installsdk.go:86] Running command: /home/mrkent/.nvm/versions/node/v20.19.5/bin/npm install file:src/dataconnect-generated
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 07:52:26.384323  162653 codegen.go:82] [connector \"example\" javascriptSdk] Generating sources into \"/home/mrkent/etax-project/src/dataconnect-generated\"\nI1029 07:52:26.430410  162653 collector.go:107] schema extensions wrote into \"/home/mrkent/etax-project/dataconnect/.dataconnect/schema\"\nGenerated sources: main/input.gql [28173B] main/relation.gql [13746B] main/query.gql [5099B] main/mutation.gql [13679B] prelude.gql [73219B] main/implicit.gql [1261B] \nI1029 07:52:26.431748  162653 collector.go:107] connector \"example\" javascriptSdk wrote into \"/home/mrkent/etax-project/src/dataconnect-generated\"\nGenerated sources: index.cjs.js [4069B] package.json [863B] react/index.d.ts [3961B] react/esm/package.json [17B] react/index.cjs.js [3439B] react/README.md [48299B] index.d.ts [8025B] README.md [40931B] react/package.json [460B] react/esm/index.esm.js [3269B] .guides/usage.md [3489B] .guides/setup.md [1682B] esm/index.esm.js [3579B] esm/package.json [17B] \nI1029 07:52:26.438159  162653 installsdk.go:86] Running command: /home/mrkent/.nvm/versions/node/v20.19.5/bin/npm install file:src/dataconnect-generated\n"}}
+[debug] [2025-10-29T00:52:28.788Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-10-29T00:52:28.788Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-10-29T00:52:36.086Z] E1029 07:52:34.419342  162653 installsdk.go:88] Failed to install package: exit status 1
+I1029 07:52:34.419413  162653 load.go:109] Finished reloading
+I1029 07:52:34.422761  162653 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1029 07:52:34.419342  162653 installsdk.go:88] Failed to install package: exit status 1\nI1029 07:52:34.419413  162653 load.go:109] Finished reloading\nI1029 07:52:34.422761  162653 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[info] [Firebase Plugin] Stopping Data Connect toolkit
+[warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 
+[debug] [2025-10-29T01:18:28.479Z] [Firebase Plugin] Activating Firebase extension.
+[info] [Firebase Plugin] Checked firebase-tools, is up to date!
+[debug] [2025-10-29T01:18:35.463Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-10-29T01:18:35.465Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-29T01:18:35.466Z] > authorizing via signed-in user (begau1302@gmail.com)
+[debug] [2025-10-29T01:18:35.471Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T01:18:35.472Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T01:18:35.472Z] [Firebase Plugin] User found:  begau1302@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-10-29T01:18:35.474Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T01:18:35.476Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-10-29T01:18:35.490Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.15.0) on port 50001
+[debug] [2025-10-29T01:18:36.582Z] I1029 08:18:36.548828  173188 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 ad83] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/mutations.gql [1243B] example/queries.gql [1801B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 08:18:36.548828  173188 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 ad83] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1992B] \nConnector \"example\": sources: example/mutations.gql [1243B] example/queries.gql [1801B] \n"}}
+[debug] [2025-10-29T01:18:36.583Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-10-29T01:18:36.583Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-10-29T01:18:36.584Z] Starting Data Connect Emulator with command {"binary":"/home/mrkent/.cache/firebase/emulators/dataconnect-emulator-2.15.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/mrkent/etax-project/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/mrkent/.cache/firebase/emulators/dataconnect-emulator-2.15.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/mrkent/etax-project/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-10-29T01:18:36.806Z] I1029 08:18:36.632558  173198 load.go:31] Reloading schema and connectors...
+I1029 08:18:36.697088  173198 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 04b4] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/mutations.gql [1243B] example/queries.gql [1801B] 
+I1029 08:18:36.779610  173198 codegen.go:82] [connector "example" javascriptSdk] Generating sources into "/home/mrkent/etax-project/src/dataconnect-generated"
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 08:18:36.632558  173198 load.go:31] Reloading schema and connectors...\nI1029 08:18:36.697088  173198 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 04b4] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1992B] \nConnector \"example\": sources: example/mutations.gql [1243B] example/queries.gql [1801B] \nI1029 08:18:36.779610  173198 codegen.go:82] [connector \"example\" javascriptSdk] Generating sources into \"/home/mrkent/etax-project/src/dataconnect-generated\"\n"}}
+[debug] [2025-10-29T01:18:36.899Z] I1029 08:18:36.808935  173198 collector.go:107] schema extensions wrote into "/home/mrkent/etax-project/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73219B] main/implicit.gql [1261B] main/input.gql [28173B] main/relation.gql [13746B] main/query.gql [5099B] main/mutation.gql [13679B] 
+I1029 08:18:36.809922  173198 collector.go:107] connector "example" javascriptSdk wrote into "/home/mrkent/etax-project/src/dataconnect-generated"
+Generated sources: esm/package.json [17B] index.cjs.js [4069B] package.json [863B] README.md [40931B] react/index.cjs.js [3439B] react/README.md [48299B] .guides/setup.md [1682B] index.d.ts [8025B] esm/index.esm.js [3579B] react/index.d.ts [3961B] react/package.json [460B] react/esm/package.json [17B] react/esm/index.esm.js [3269B] .guides/usage.md [3489B] 
+I1029 08:18:36.810556  173198 installsdk.go:86] Running command: /home/mrkent/.nvm/versions/node/v20.19.5/bin/npm install file:src/dataconnect-generated
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 08:18:36.808935  173198 collector.go:107] schema extensions wrote into \"/home/mrkent/etax-project/dataconnect/.dataconnect/schema\"\nGenerated sources: prelude.gql [73219B] main/implicit.gql [1261B] main/input.gql [28173B] main/relation.gql [13746B] main/query.gql [5099B] main/mutation.gql [13679B] \nI1029 08:18:36.809922  173198 collector.go:107] connector \"example\" javascriptSdk wrote into \"/home/mrkent/etax-project/src/dataconnect-generated\"\nGenerated sources: esm/package.json [17B] index.cjs.js [4069B] package.json [863B] README.md [40931B] react/index.cjs.js [3439B] react/README.md [48299B] .guides/setup.md [1682B] index.d.ts [8025B] esm/index.esm.js [3579B] react/index.d.ts [3961B] react/package.json [460B] react/esm/package.json [17B] react/esm/index.esm.js [3269B] .guides/usage.md [3489B] \nI1029 08:18:36.810556  173198 installsdk.go:86] Running command: /home/mrkent/.nvm/versions/node/v20.19.5/bin/npm install file:src/dataconnect-generated\n"}}
+[debug] [2025-10-29T01:18:37.423Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-10-29T01:18:37.424Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-10-29T01:18:40.191Z] E1029 08:18:40.142035  173198 installsdk.go:88] Failed to install package: exit status 1
+I1029 08:18:40.142130  173198 load.go:109] Finished reloading
+I1029 08:18:40.142861  173198 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1029 08:18:40.142035  173198 installsdk.go:88] Failed to install package: exit status 1\nI1029 08:18:40.142130  173198 load.go:109] Finished reloading\nI1029 08:18:40.142861  173198 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[debug] [2025-10-29T01:18:40.423Z] I1029 08:18:40.353881  173198 engine.go:169] [/emulator/v0etaxmobileloginmain-fixed-2 04b4] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 08:18:40.353881  173198 engine.go:169] [/emulator/v0etaxmobileloginmain-fixed-2 04b4] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}
+[debug] [2025-10-29T01:20:59.145Z] [Firebase Plugin] Value of process.env.MONOSPACE_ENV: undefined
+[debug] [2025-10-29T01:20:59.148Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-10-29T01:20:59.149Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-29T01:20:59.150Z] > authorizing via signed-in user (begau1302@gmail.com)
+[debug] [2025-10-29T01:20:59.151Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T01:20:59.151Z] [Firebase Plugin] User found:  begau1302@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-10-29T01:20:59.153Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T01:20:59.154Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-10-29T01:20:59.201Z] [Firebase Plugin] Value of process.env.MONOSPACE_ENV: undefined
+[debug] [2025-10-29T01:20:59.202Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-10-29T01:20:59.203Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-29T01:20:59.203Z] > authorizing via signed-in user (begau1302@gmail.com)
+[debug] [2025-10-29T01:20:59.204Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T01:20:59.204Z] [Firebase Plugin] User found:  begau1302@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-10-29T01:20:59.205Z] Checked if tokens are valid: true, expires at: 1761702733037
+[debug] [2025-10-29T01:20:59.205Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-10-29T01:20:59.235Z] Emulator locator file path: /tmp/hub-anhbao-373f3.json
+[debug] [2025-10-29T01:20:59.871Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-10-29T01:20:59.871Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-10-29T01:20:59.883Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-10-29T01:20:59.884Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-10-29T04:08:05.334Z] [Firebase Plugin] Activating Firebase extension.
+[info] [Firebase Plugin] Checked firebase-tools, is up to date!
+[debug] [2025-10-29T04:08:15.473Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-10-29T04:08:15.475Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-29T04:08:15.475Z] > authorizing via signed-in user (begau1302@gmail.com)
+[debug] [2025-10-29T04:08:15.482Z] Checked if tokens are valid: false, expires at: 1761702733037
+[debug] [2025-10-29T04:08:15.483Z] Checked if tokens are valid: false, expires at: 1761702733037
+[debug] [2025-10-29T04:08:15.483Z] > refreshing access token with scopes: []
+[debug] [2025-10-29T04:08:15.486Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-10-29T04:08:15.486Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-29T04:08:15.519Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.15.0) on port 50002
+[debug] [2025-10-29T04:08:17.640Z] I1029 11:08:17.565370  258106 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 aabb] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/mutations.gql [1243B] example/queries.gql [1801B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 11:08:17.565370  258106 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 aabb] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1992B] \nConnector \"example\": sources: example/mutations.gql [1243B] example/queries.gql [1801B] \n"}}
+[debug] [2025-10-29T04:08:17.643Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-10-29T04:08:17.644Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-10-29T04:08:17.645Z] Starting Data Connect Emulator with command {"binary":"/home/mrkent/.cache/firebase/emulators/dataconnect-emulator-2.15.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50002","--config_dir=/home/mrkent/etax-project/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/mrkent/.cache/firebase/emulators/dataconnect-emulator-2.15.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50002\",\"--config_dir=/home/mrkent/etax-project/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-10-29T04:08:17.789Z] I1029 11:08:17.711124  258116 load.go:31] Reloading schema and connectors...
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 11:08:17.711124  258116 load.go:31] Reloading schema and connectors...\n"}}
+[debug] [2025-10-29T04:08:17.946Z] I1029 11:08:17.843465  258116 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 67d1] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/mutations.gql [1243B] example/queries.gql [1801B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 11:08:17.843465  258116 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 67d1] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1992B] \nConnector \"example\": sources: example/mutations.gql [1243B] example/queries.gql [1801B] \n"}}
+[debug] [2025-10-29T04:08:18.057Z] I1029 11:08:18.007380  258116 codegen.go:82] [connector "example" javascriptSdk] Generating sources into "/home/mrkent/etax-project/src/dataconnect-generated"
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 11:08:18.007380  258116 codegen.go:82] [connector \"example\" javascriptSdk] Generating sources into \"/home/mrkent/etax-project/src/dataconnect-generated\"\n"}}
+[debug] [2025-10-29T04:08:18.122Z] I1029 11:08:18.056488  258116 collector.go:107] schema extensions wrote into "/home/mrkent/etax-project/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73219B] main/relation.gql [13746B] main/query.gql [5099B] main/mutation.gql [13679B] main/implicit.gql [1261B] main/input.gql [28173B] 
+I1029 11:08:18.076464  258116 collector.go:107] connector "example" javascriptSdk wrote into "/home/mrkent/etax-project/src/dataconnect-generated"
+Generated sources: react/esm/index.esm.js [3269B] .guides/usage.md [3489B] index.cjs.js [4069B] package.json [863B] README.md [40931B] react/esm/package.json [17B] react/README.md [48299B] .guides/setup.md [1682B] index.d.ts [8025B] esm/index.esm.js [3579B] esm/package.json [17B] react/index.d.ts [3961B] react/package.json [460B] react/index.cjs.js [3439B] 
+I1029 11:08:18.077446  258116 installsdk.go:86] Running command: /home/mrkent/.nvm/versions/node/v20.19.5/bin/npm install file:src/dataconnect-generated
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 11:08:18.056488  258116 collector.go:107] schema extensions wrote into \"/home/mrkent/etax-project/dataconnect/.dataconnect/schema\"\nGenerated sources: prelude.gql [73219B] main/relation.gql [13746B] main/query.gql [5099B] main/mutation.gql [13679B] main/implicit.gql [1261B] main/input.gql [28173B] \nI1029 11:08:18.076464  258116 collector.go:107] connector \"example\" javascriptSdk wrote into \"/home/mrkent/etax-project/src/dataconnect-generated\"\nGenerated sources: react/esm/index.esm.js [3269B] .guides/usage.md [3489B] index.cjs.js [4069B] package.json [863B] README.md [40931B] react/esm/package.json [17B] react/README.md [48299B] .guides/setup.md [1682B] index.d.ts [8025B] esm/index.esm.js [3579B] esm/package.json [17B] react/index.d.ts [3961B] react/package.json [460B] react/index.cjs.js [3439B] \nI1029 11:08:18.077446  258116 installsdk.go:86] Running command: /home/mrkent/.nvm/versions/node/v20.19.5/bin/npm install file:src/dataconnect-generated\n"}}
+[debug] [2025-10-29T04:08:18.540Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-10-29T04:08:18.540Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-29T04:08:18.565Z] [Firebase Plugin] User found:  begau1302@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-10-29T04:08:18.568Z] Checked if tokens are valid: true, expires at: 1761714497543
+[debug] [2025-10-29T04:08:18.570Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-10-29T04:08:22.514Z] E1029 11:08:21.348313  258116 installsdk.go:88] Failed to install package: exit status 1
+I1029 11:08:21.348420  258116 load.go:109] Finished reloading
+I1029 11:08:21.351134  258116 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50002
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1029 11:08:21.348313  258116 installsdk.go:88] Failed to install package: exit status 1\nI1029 11:08:21.348420  258116 load.go:109] Finished reloading\nI1029 11:08:21.351134  258116 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50002\n"}}
+[debug] [2025-10-29T04:08:24.363Z] I1029 11:08:24.231016  258116 engine.go:169] [/emulator/v0etaxmobileloginmain-fixed-2 67d1] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 11:08:24.231016  258116 engine.go:169] [/emulator/v0etaxmobileloginmain-fixed-2 67d1] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}
+[debug] [2025-10-29T04:08:41.622Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-10-29T04:08:41.623Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-10-29T10:17:25.992Z] [Firebase Plugin] Activating Firebase extension.
+[info] [Firebase Plugin] Checked firebase-tools, is up to date!
+[debug] [2025-10-29T10:17:42.180Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-10-29T10:17:42.181Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-29T10:17:42.182Z] > authorizing via signed-in user (begau1302@gmail.com)
+[debug] [2025-10-29T10:17:42.186Z] Checked if tokens are valid: false, expires at: 1761714497543
+[debug] [2025-10-29T10:17:42.186Z] Checked if tokens are valid: false, expires at: 1761714497543
+[debug] [2025-10-29T10:17:42.187Z] > refreshing access token with scopes: []
+[debug] [2025-10-29T10:17:42.189Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-10-29T10:17:42.189Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-29T10:17:42.198Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.15.0) on port 50003
+[debug] [2025-10-29T10:17:43.518Z] I1029 17:17:43.492989  487507 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 7d3c] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/mutations.gql [1243B] example/queries.gql [1801B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 17:17:43.492989  487507 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 7d3c] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1992B] \nConnector \"example\": sources: example/mutations.gql [1243B] example/queries.gql [1801B] \n"}}
+[debug] [2025-10-29T10:17:43.519Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-10-29T10:17:43.519Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-10-29T10:17:43.520Z] Starting Data Connect Emulator with command {"binary":"/home/mrkent/.cache/firebase/emulators/dataconnect-emulator-2.15.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50003","--config_dir=/home/mrkent/etax-project/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/mrkent/.cache/firebase/emulators/dataconnect-emulator-2.15.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50003\",\"--config_dir=/home/mrkent/etax-project/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-10-29T10:17:43.607Z] I1029 17:17:43.557076  487517 load.go:31] Reloading schema and connectors...
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 17:17:43.557076  487517 load.go:31] Reloading schema and connectors...\n"}}
+[debug] [2025-10-29T10:17:43.631Z] I1029 17:17:43.614936  487517 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 29ea] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/mutations.gql [1243B] example/queries.gql [1801B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 17:17:43.614936  487517 control.go:94] [/emulator/v0etaxmobileloginmain-fixed-2 29ea] UpdateResources(): done\nMain schema: sources: schema/schema.gql [1992B] \nConnector \"example\": sources: example/mutations.gql [1243B] example/queries.gql [1801B] \n"}}
+[debug] [2025-10-29T10:17:43.706Z] I1029 17:17:43.691453  487517 codegen.go:82] [connector "example" javascriptSdk] Generating sources into "/home/mrkent/etax-project/src/dataconnect-generated"
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 17:17:43.691453  487517 codegen.go:82] [connector \"example\" javascriptSdk] Generating sources into \"/home/mrkent/etax-project/src/dataconnect-generated\"\n"}}
+[debug] [2025-10-29T10:17:43.716Z] I1029 17:17:43.714615  487517 collector.go:107] schema extensions wrote into "/home/mrkent/etax-project/dataconnect/.dataconnect/schema"
+Generated sources: main/query.gql [5099B] main/mutation.gql [13679B] prelude.gql [73219B] main/implicit.gql [1261B] main/input.gql [28173B] main/relation.gql [13746B] 
+I1029 17:17:43.716606  487517 collector.go:107] connector "example" javascriptSdk wrote into "/home/mrkent/etax-project/src/dataconnect-generated"
+Generated sources: .guides/setup.md [1682B] esm/index.esm.js [3579B] esm/package.json [17B] index.cjs.js [4069B] package.json [863B] README.md [40931B] react/index.cjs.js [3439B] react/esm/index.esm.js [3269B] .guides/usage.md [3489B] index.d.ts [8025B] react/index.d.ts [3961B] react/package.json [460B] react/esm/package.json [17B] react/README.md [48299B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 17:17:43.714615  487517 collector.go:107] schema extensions wrote into \"/home/mrkent/etax-project/dataconnect/.dataconnect/schema\"\nGenerated sources: main/query.gql [5099B] main/mutation.gql [13679B] prelude.gql [73219B] main/implicit.gql [1261B] main/input.gql [28173B] main/relation.gql [13746B] \nI1029 17:17:43.716606  487517 collector.go:107] connector \"example\" javascriptSdk wrote into \"/home/mrkent/etax-project/src/dataconnect-generated\"\nGenerated sources: .guides/setup.md [1682B] esm/index.esm.js [3579B] esm/package.json [17B] index.cjs.js [4069B] package.json [863B] README.md [40931B] react/index.cjs.js [3439B] react/esm/index.esm.js [3269B] .guides/usage.md [3489B] index.d.ts [8025B] react/index.d.ts [3961B] react/package.json [460B] react/esm/package.json [17B] react/README.md [48299B] \n"}}
+[debug] [2025-10-29T10:17:43.725Z] I1029 17:17:43.718003  487517 installsdk.go:86] Running command: /home/mrkent/.nvm/versions/node/v20.19.5/bin/npm install file:src/dataconnect-generated
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 17:17:43.718003  487517 installsdk.go:86] Running command: /home/mrkent/.nvm/versions/node/v20.19.5/bin/npm install file:src/dataconnect-generated\n"}}
+[debug] [2025-10-29T10:17:43.734Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-10-29T10:17:43.736Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-29T10:17:43.746Z] [Firebase Plugin] User found:  begau1302@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-10-29T10:17:43.749Z] Checked if tokens are valid: true, expires at: 1761736662736
+[debug] [2025-10-29T10:17:43.751Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-10-29T10:17:47.085Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-10-29T10:17:47.089Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-10-29T10:17:47.176Z] E1029 17:17:47.152902  487517 installsdk.go:88] Failed to install package: exit status 1
+I1029 17:17:47.152984  487517 load.go:109] Finished reloading
+I1029 17:17:47.154423  487517 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50003
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E1029 17:17:47.152902  487517 installsdk.go:88] Failed to install package: exit status 1\nI1029 17:17:47.152984  487517 load.go:109] Finished reloading\nI1029 17:17:47.154423  487517 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50003\n"}}
+[debug] [2025-10-29T10:17:47.345Z] I1029 17:17:47.343531  487517 engine.go:169] [/emulator/v0etaxmobileloginmain-fixed-2 29ea] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1029 17:17:47.343531  487517 engine.go:169] [/emulator/v0etaxmobileloginmain-fixed-2 29ea] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}
