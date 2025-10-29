@@ -1,8 +1,42 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const puppeteer = require('puppeteer');
+const handlebars = require('handlebars');
+const fs = require('fs');
+const path = require('path');
 
 // Initialize Firebase Admin SDK
 admin.initializeApp();
+
+// Helper functions for formatting
+function formatDateTime(date, format = 'dd/MM/yyyy HH:mm:ss') {
+  if (!date) return '';
+  const d = date instanceof Date ? date : date.toDate ? date.toDate() : new Date(date);
+  
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const seconds = String(d.getSeconds()).padStart(2, '0');
+
+  return format
+    .replace('dd', day)
+    .replace('MM', month)
+    .replace('yyyy', year)
+    .replace('HH', hours)
+    .replace('mm', minutes)
+    .replace('ss', seconds);
+}
+
+function formatCurrency(amount) {
+  if (!amount) return '0';
+  return new Intl.NumberFormat('vi-VN').format(amount);
+}
+
+// Register Handlebars helpers
+handlebars.registerHelper('formatDate', formatDateTime);
+handlebars.registerHelper('formatCurrency', formatCurrency);
 
 // Helper function to verify admin token
 async function verifyAdminToken(req) {
@@ -424,6 +458,229 @@ exports.importMapping = functions.https.onRequest(async (req, res) => {
     res.status(500).send(error.message || 'Không thể import mapping');
   }
 });
+
+// ===================================
+// PDF GENERATION API
+// ===================================
+
+// Generate PDF
+exports.generatePdf = functions.https.onRequest(async (req, res) => {
+  const { mst, templateId } = req.query;
+
+  if (!mst) {
+    return res.status(400).send('Thiếu tham số MST!');
+  }
+
+  let browser;
+  try {
+    // Check permission if token provided
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      const idToken = req.headers.authorization.split('Bearer ')[1];
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      
+      // Get user data to check role and mstList
+      const userDoc = await admin.firestore().collection('users').doc(decodedToken.uid).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        // Admin có thể xem tất cả, user chỉ xem MST của mình
+        if (userData.role !== 'admin' && !userData.mstList?.includes(mst) && userData.mst !== mst) {
+          return res.status(403).send('Bạn không có quyền truy cập MST này');
+        }
+      }
+    }
+
+    // Lấy dữ liệu transaction từ Firestore
+    const transactionDoc = await admin.firestore().collection('transactions').doc(mst).get();
+    if (!transactionDoc.exists) {
+      return res.status(404).send('Không tìm thấy dữ liệu cho MST này');
+    }
+
+    let transactionData = transactionDoc.data();
+
+    // Xác định template để dùng
+    let finalTemplateId = templateId;
+    if (!finalTemplateId || finalTemplateId === 'default') {
+      // Lấy default template
+      const defaultTemplate = await admin.firestore()
+        .collection('templates')
+        .where('isDefault', '==', true)
+        .where('isActive', '==', true)
+        .limit(1)
+        .get();
+      
+      if (!defaultTemplate.empty) {
+        finalTemplateId = defaultTemplate.docs[0].id;
+      } else {
+        // Fallback: lấy template đầu tiên active
+        const activeTemplate = await admin.firestore()
+          .collection('templates')
+          .where('isActive', '==', true)
+          .limit(1)
+          .get();
+        
+        if (!activeTemplate.empty) {
+          finalTemplateId = activeTemplate.docs[0].id;
+        } else {
+          return res.status(404).send('Không tìm thấy template để sử dụng');
+        }
+      }
+    }
+
+    // Lấy template
+    const templateDoc = await admin.firestore().collection('templates').doc(finalTemplateId).get();
+    if (!templateDoc.exists) {
+      return res.status(404).send('Template không tồn tại');
+    }
+
+    const templateData = templateDoc.data();
+    let htmlTemplate = templateData.htmlTemplate;
+
+    // Lấy mapping nếu có
+    const mappingDoc = await admin.firestore().collection('mappings').doc(finalTemplateId).get();
+    let finalData = { ...transactionData };
+
+    if (mappingDoc.exists) {
+      const mapping = mappingDoc.data().fields || {};
+      const mappedData = {};
+
+      // Apply mapping: chỉ lấy fields visible, format theo config
+      for (const [key, config] of Object.entries(mapping)) {
+        if (config.visible && transactionData[key] !== undefined) {
+          let value = transactionData[key];
+
+          // Format theo config
+          if (config.format === 'currency') {
+            value = formatCurrency(value);
+          } else if (config.format === 'datetime') {
+            value = formatDateTime(value);
+          }
+
+          mappedData[key] = value;
+        }
+      }
+
+      // Merge với dữ liệu gốc (để đảm bảo có đủ fields cho template)
+      finalData = { ...transactionData, ...mappedData };
+    }
+
+    // Format các trường thường dùng
+    if (finalData.paymentDate) {
+      finalData.paymentDateFormatted = formatDateTime(finalData.paymentDate);
+    }
+    if (finalData.amount !== undefined) {
+      finalData.amountFormatted = formatCurrency(finalData.amount);
+    }
+
+    // Compile Handlebars template
+    const template = handlebars.compile(htmlTemplate);
+    const html = template(finalData);
+
+    // Launch Puppeteer
+    browser = await puppeteer.launch({
+      headless: 'new',
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
+      ],
+      timeout: 30000
+    });
+
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+
+    // Generate PDF
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '20mm',
+        right: '15mm',
+        bottom: '20mm',
+        left: '15mm'
+      }
+    });
+
+    await browser.close();
+
+    // Return PDF
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="Giay_nop_tien_MST_${mst}.pdf"`);
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    if (browser) {
+      await browser.close();
+    }
+    console.error('Error generating PDF:', error);
+    res.status(500).send(error.message || 'Không thể tạo PDF. Vui lòng thử lại sau.');
+  }
+});
+
+// ===================================
+// AUTO-TRIGGERS
+// ===================================
+
+// Auto-generate PDF when transaction is created
+exports.onTransactionCreate = functions.firestore
+  .document('transactions/{mst}')
+  .onCreate(async (snap, context) => {
+    const transactionData = snap.data();
+    const mst = context.params.mst;
+
+    try {
+      // Lấy default template
+      const defaultTemplate = await admin.firestore()
+        .collection('templates')
+        .where('isDefault', '==', true)
+        .where('isActive', '==', true)
+        .limit(1)
+        .get();
+
+      if (defaultTemplate.empty) {
+        console.log(`No default template found for MST ${mst}, skipping PDF generation`);
+        return;
+      }
+
+      const templateId = defaultTemplate.docs[0].id;
+      
+      // Generate PDF sẽ được gọi khi user request, trigger này chỉ log
+      // Hoặc có thể lưu PDF vào Storage ở đây nếu cần
+      console.log(`Transaction created for MST ${mst}, ready for PDF generation with template ${templateId}`);
+      
+    } catch (error) {
+      console.error(`Error in onTransactionCreate for MST ${mst}:`, error);
+    }
+  });
+
+// Re-generate PDFs when mapping is updated
+exports.onMappingUpdate = functions.firestore
+  .document('mappings/{templateId}')
+  .onWrite(async (change, context) => {
+    const templateId = context.params.templateId;
+
+    try {
+      // Tìm tất cả transactions đang dùng template này
+      const transactionsSnapshot = await admin.firestore()
+        .collection('transactions')
+        .where('templateId', '==', templateId)
+        .get();
+
+      if (transactionsSnapshot.empty) {
+        console.log(`No transactions using template ${templateId}`);
+        return;
+      }
+
+      console.log(`Mapping updated for template ${templateId}, ${transactionsSnapshot.size} transactions affected`);
+      
+      // PDFs sẽ được re-generate khi user request
+      // Có thể trigger re-generation tự động nếu cần (nhưng tốn tài nguyên)
+      
+    } catch (error) {
+      console.error(`Error in onMappingUpdate for template ${templateId}:`, error);
+    }
+  });
 
 module.exports = {
   verifyAdminToken,
