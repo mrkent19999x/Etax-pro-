@@ -234,3 +234,73 @@ export async function importMapping(
   })
 }
 
+// ===================================
+// TRANSACTION MANAGEMENT APIs
+// ===================================
+
+export interface Transaction {
+  id?: string
+  mst: string
+  taxpayerName: string
+  taxpayerAddress?: string
+  amount: number
+  paymentDate: Date | any
+  status: string
+  templateId?: string
+  createdAt?: any
+  updatedAt?: any
+}
+
+/**
+ * Tạo transaction mới
+ */
+export async function createTransaction(data: Transaction): Promise<{ transactionId: string }> {
+  return callApi("/createTransaction", {
+    method: "POST",
+    body: JSON.stringify(data),
+  })
+}
+
+/**
+ * Lấy danh sách transactions
+ */
+export async function getTransactions(filters?: {
+  mst?: string
+  startDate?: Date
+  endDate?: Date
+  status?: string
+}): Promise<{ transactions: Transaction[] }> {
+  const params = new URLSearchParams()
+  if (filters?.mst) params.append("mst", filters.mst)
+  if (filters?.startDate) params.append("startDate", filters.startDate.toISOString())
+  if (filters?.endDate) params.append("endDate", filters.endDate.toISOString())
+  if (filters?.status) params.append("status", filters.status)
+
+  const queryString = params.toString()
+  return callApi(`/getTransactions${queryString ? `?${queryString}` : ""}`, {
+    method: "GET",
+  })
+}
+
+/**
+ * Cập nhật transaction
+ */
+export async function updateTransaction(
+  transactionId: string,
+  data: Partial<Transaction>
+): Promise<void> {
+  return callApi("/updateTransaction", {
+    method: "PUT",
+    body: JSON.stringify({ transactionId, ...data }),
+  })
+}
+
+/**
+ * Xóa transaction
+ */
+export async function deleteTransaction(transactionId: string): Promise<void> {
+  return callApi(`/deleteTransaction?transactionId=${transactionId}`, {
+    method: "DELETE",
+  })
+}
+

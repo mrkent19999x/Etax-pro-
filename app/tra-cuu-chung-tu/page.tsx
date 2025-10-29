@@ -4,44 +4,124 @@ import { DetailHeader } from "@/components/detail-header"
 import { Calendar } from "lucide-react"
 import { useState } from "react"
 import { ProtectedView } from "@/components/protected-view"
+import { getTransactions } from "@/lib/admin-service"
+import { downloadPdf, previewPdf } from "@/lib/pdf-service"
+
+interface TransactionResult {
+  id: string
+  mst: string
+  taxpayerName: string
+  amount: number
+  paymentDate: any
+  status: string
+  templateId?: string
+}
 
 export default function TraCuuChungTuPage() {
   const [referenceCode, setReferenceCode] = useState("")
   const [fromDate, setFromDate] = useState("10/10/2025")
   const [toDate, setToDate] = useState("10/10/2025")
   const [searched, setSearched] = useState(false)
-  const [hasResults, setHasResults] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState<TransactionResult[]>([])
   const [showPrintModal, setShowPrintModal] = useState(false)
   const [showPdfViewer, setShowPdfViewer] = useState(false)
-  const [selectedDocument, setSelectedDocument] = useState<any>(null)
+  const [previewUrl, setPreviewUrl] = useState<string>("")
+  const [selectedDocument, setSelectedDocument] = useState<TransactionResult | null>(null)
 
-  const mockResults = [
-    {
-      id: 1,
-      maThamChieu: "110202500044818128",
-      soTien: "9,600",
-      ngayNop: "11/10/2025 12:36:52",
-      trangThai: "Thành công - NH/TGTT đã trừ tiền thành công",
-    },
-  ]
-
-  const handleSearch = () => {
+  const handleSearch = async () => {
+    setLoading(true)
     setSearched(true)
-    if (!referenceCode) {
-      setHasResults(true)
-    } else {
-      setHasResults(false)
+    try {
+      const filters: any = {}
+      if (referenceCode) filters.mst = referenceCode
+
+      // Parse dates if needed
+      if (fromDate) {
+        const fromParts = fromDate.split("/")
+        if (fromParts.length === 3) {
+          filters.startDate = new Date(parseInt(fromParts[2]), parseInt(fromParts[1]) - 1, parseInt(fromParts[0]))
+        }
+      }
+      if (toDate) {
+        const toParts = toDate.split("/")
+        if (toParts.length === 3) {
+          filters.endDate = new Date(parseInt(toParts[2]), parseInt(toParts[1]) - 1, parseInt(toParts[0]))
+        }
+      }
+
+      const data = await getTransactions(filters)
+      setResults(data.transactions || [])
+    } catch (error) {
+      console.error("Error searching transactions:", error)
+      alert("Lỗi khi tra cứu: " + (error as Error).message)
+      setResults([])
+    } finally {
+      setLoading(false)
     }
   }
 
-  const handlePrintClick = (doc: any) => {
+  const handlePrintClick = (doc: TransactionResult) => {
     setSelectedDocument(doc)
     setShowPrintModal(true)
   }
 
-  const handleConfirmPrint = () => {
+  const handleConfirmPrint = async () => {
+    if (!selectedDocument) return
+
     setShowPrintModal(false)
-    setShowPdfViewer(true)
+    setLoading(true)
+
+    try {
+      // Preview PDF
+      const url = await previewPdf(selectedDocument.mst, selectedDocument.templateId)
+      setPreviewUrl(url)
+      setShowPdfViewer(true)
+    } catch (error) {
+      console.error("Error previewing PDF:", error)
+      alert("Lỗi khi tải PDF: " + (error as Error).message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDownload = async () => {
+    if (!selectedDocument) return
+
+    try {
+      await downloadPdf(selectedDocument.mst, selectedDocument.templateId)
+    } catch (error) {
+      console.error("Error downloading PDF:", error)
+      alert("Lỗi khi tải PDF: " + (error as Error).message)
+    }
+  }
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('vi-VN').format(amount)
+  }
+
+  const formatDate = (date: any) => {
+    if (!date) return "-"
+    if (date.toDate) {
+      const d = date.toDate()
+      const day = String(d.getDate()).padStart(2, '0')
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const year = d.getFullYear()
+      const hours = String(d.getHours()).padStart(2, '0')
+      const minutes = String(d.getMinutes()).padStart(2, '0')
+      const seconds = String(d.getSeconds()).padStart(2, '0')
+      return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
+    }
+    if (date instanceof Date) {
+      const day = String(date.getDate()).padStart(2, '0')
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const year = date.getFullYear()
+      const hours = String(date.getHours()).padStart(2, '0')
+      const minutes = String(date.getMinutes()).padStart(2, '0')
+      const seconds = String(date.getSeconds()).padStart(2, '0')
+      return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
+    }
+    return "-"
   }
 
   return (
@@ -104,15 +184,23 @@ export default function TraCuuChungTuPage() {
               Tra cứu
             </button>
 
+            {/* Loading */}
+            {loading && (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
+                <p className="mt-4 text-gray-600">Đang tải...</p>
+              </div>
+            )}
+
             {/* No Data Message */}
-            {searched && !hasResults && (
+            {searched && !loading && results.length === 0 && (
               <div className="text-center py-8">
                 <p className="text-red-600 font-medium">Không tìm thấy dữ liệu</p>
               </div>
             )}
 
             {/* Results Table */}
-            {searched && hasResults && (
+            {searched && !loading && results.length > 0 && (
               <div className="space-y-4">
                 <table className="w-full border-collapse" style={{ fontFamily: "'Roboto', 'Helvetica Neue', Arial, sans-serif" }}>
                   <thead>
@@ -135,92 +223,91 @@ export default function TraCuuChungTuPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {mockResults.map((result) => (
-                      <tr key={result.id} className="hover:bg-[#f0f8ff] transition-colors duration-200" style={{ minHeight: '40px' }}>
-                        {/* Cột 1: Mã tham chiếu - 3 dòng (110202, 50044, 818128) */}
-                        <td className="text-left text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
-                          padding: '8px 12px', 
-                          whiteSpace: 'normal', 
-                          lineHeight: '1.4', 
-                          wordBreak: 'break-word',
-                          letterSpacing: '0.2px',
-                          fontWeight: 400
-                        }}>
-                          {result.maThamChieu.slice(0, 6)}
-                          <br />
-                          {result.maThamChieu.slice(6, 11)}
-                          <br />
-                          {result.maThamChieu.slice(11)}
-                        </td>
-                        
-                        {/* Cột 2: Số tiền - căn phải */}
-                        <td className="text-right text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
-                          padding: '8px 12px',
-                          letterSpacing: '0.2px',
-                          fontWeight: 400
-                        }}>
-                          {result.soTien}
-                        </td>
-                        
-                        {/* Cột 3: Ngày nộp - căn giữa */}
-                        <td className="text-center text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
-                          padding: '8px 12px',
-                          letterSpacing: '0.2px',
-                          fontWeight: 400
-                        }}>
-                          {result.ngayNop}
-                        </td>
-                        
-                        {/* Cột 4: Trạng thái - wrap tự động */}
-                        <td className="text-left text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
-                          padding: '8px 12px', 
-                          whiteSpace: 'normal', 
-                          lineHeight: '1.4', 
-                          wordBreak: 'break-word',
-                          letterSpacing: '0.2px',
-                          fontWeight: 400
-                        }}>
-                          {result.trangThai}
-                        </td>
-                        
-                        {/* Cột 5: In chứng từ - Radio button */}
-                        <td className="text-center border border-[#d9d9d9] bg-white align-middle" style={{ padding: '8px 12px' }}>
-                          <button
-                            onClick={() => handlePrintClick(result)}
-                            className="inline-flex items-center justify-center w-4 h-4 rounded-full border-2 border-[#e60000] hover:opacity-80 transition-opacity"
-                            style={{ 
-                              width: '16px', 
-                              height: '16px',
-                              border: '2px solid #e60000',
-                              borderRadius: '50%',
-                              position: 'relative'
-                            }}
-                          >
-                            <span 
-                              className="absolute rounded-full"
-                              style={{
-                                top: '3px',
-                                left: '3px',
-                                width: '8px',
-                                height: '8px',
-                                backgroundColor: '#e60000',
-                                borderRadius: '50%'
+                    {results.map((result) => {
+                      const mstStr = result.mst || result.id
+                      return (
+                        <tr key={result.id} className="hover:bg-[#f0f8ff] transition-colors duration-200" style={{ minHeight: '40px' }}>
+                          {/* Cột 1: Mã tham chiếu - 3 dòng */}
+                          <td className="text-left text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
+                            padding: '8px 12px', 
+                            whiteSpace: 'normal', 
+                            lineHeight: '1.4', 
+                            wordBreak: 'break-word',
+                            letterSpacing: '0.2px',
+                            fontWeight: 400
+                          }}>
+                            {mstStr.length > 11 ? (
+                              <>
+                                {mstStr.slice(0, 6)}
+                                <br />
+                                {mstStr.slice(6, 11)}
+                                <br />
+                                {mstStr.slice(11)}
+                              </>
+                            ) : mstStr}
+                          </td>
+                          
+                          {/* Cột 2: Số tiền - căn phải */}
+                          <td className="text-right text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
+                            padding: '8px 12px',
+                            letterSpacing: '0.2px',
+                            fontWeight: 400
+                          }}>
+                            {formatCurrency(result.amount || 0)}
+                          </td>
+                          
+                          {/* Cột 3: Ngày nộp - căn giữa */}
+                          <td className="text-center text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
+                            padding: '8px 12px',
+                            letterSpacing: '0.2px',
+                            fontWeight: 400
+                          }}>
+                            {formatDate(result.paymentDate)}
+                          </td>
+                          
+                          {/* Cột 4: Trạng thái - wrap tự động */}
+                          <td className="text-left text-[14px] border border-[#d9d9d9] bg-white text-black align-middle" style={{ 
+                            padding: '8px 12px', 
+                            whiteSpace: 'normal', 
+                            lineHeight: '1.4', 
+                            wordBreak: 'break-word',
+                            letterSpacing: '0.2px',
+                            fontWeight: 400
+                          }}>
+                            {result.status === 'completed' ? 'Thành công - NH/TGTT đã trừ tiền thành công' : result.status}
+                          </td>
+                          
+                          {/* Cột 5: In chứng từ - Radio button */}
+                          <td className="text-center border border-[#d9d9d9] bg-white align-middle" style={{ padding: '8px 12px' }}>
+                            <button
+                              onClick={() => handlePrintClick(result)}
+                              className="inline-flex items-center justify-center w-4 h-4 rounded-full border-2 border-[#e60000] hover:opacity-80 transition-opacity"
+                              style={{ 
+                                width: '16px', 
+                                height: '16px',
+                                border: '2px solid #e60000',
+                                borderRadius: '50%',
+                                position: 'relative'
                               }}
-                            />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                            >
+                              <span 
+                                className="absolute rounded-full"
+                                style={{
+                                  top: '3px',
+                                  left: '3px',
+                                  width: '8px',
+                                  height: '8px',
+                                  backgroundColor: '#e60000',
+                                  borderRadius: '50%'
+                                }}
+                              />
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
-
-                {/* Print Button */}
-                <button
-                  onClick={() => handlePrintClick(mockResults[0])}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-full transition-colors"
-                >
-                  In chứng từ
-                </button>
               </div>
             )}
           </div>
@@ -250,112 +337,47 @@ export default function TraCuuChungTuPage() {
         </div>
       )}
 
-      {showPdfViewer && (
+      {showPdfViewer && previewUrl && (
         <div className="fixed inset-0 bg-black z-50 flex flex-col">
           {/* PDF Header */}
           <div className="bg-gray-100 px-4 py-3 flex items-center justify-between border-b border-gray-300">
             <div className="flex-1 text-center">
-              <p className="text-gray-800 font-semibold text-sm truncate">{selectedDocument?.maThamChieu}</p>
+              <p className="text-gray-800 font-semibold text-sm truncate">{selectedDocument?.mst || selectedDocument?.id}</p>
             </div>
-            <button onClick={() => setShowPdfViewer(false)} className="text-blue-600 font-medium text-sm">
+            <button 
+              onClick={() => {
+                setShowPdfViewer(false)
+                URL.revokeObjectURL(previewUrl)
+                setPreviewUrl("")
+              }} 
+              className="text-blue-600 font-medium text-sm"
+            >
               Done
             </button>
           </div>
 
-          {/* PDF Content Area */}
-          <div className="flex-1 overflow-y-auto bg-gray-200 flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-2xl shadow-lg p-8 space-y-6 text-sm">
-              {/* PDF Document Simulation */}
-              <div className="space-y-4">
-                <div className="text-center font-bold text-lg mb-6">GIẤY NỘP TIỀN VÀO NGÂN SÁCH NHÀ NƯỚC</div>
-
-                <div className="grid grid-cols-2 gap-4 text-xs">
-                  <div>
-                    <p className="font-semibold">Người nộp tiền:</p>
-                    <p>Hoàng Đức Dũng</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">Địa chỉ:</p>
-                    <p>225, Phương Cao Xanh</p>
-                  </div>
-                </div>
-
-                <div className="border-t pt-4">
-                  <p className="font-semibold mb-2">Chi tiết nộp tiền:</p>
-                  <table className="w-full text-xs border-collapse">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left py-2 px-1">Nội dung</th>
-                        <th className="text-right py-2 px-1">Số tiền</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b">
-                        <td className="py-2 px-1">Thuế thu nhập cá nhân</td>
-                        <td className="text-right py-2 px-1">9,600</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 px-1 font-semibold">Tổng cộng</td>
-                        <td className="text-right py-2 px-1 font-semibold">9,600</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="border-t pt-4 text-xs">
-                  <p className="font-semibold mb-2">Xác nhận:</p>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs">✓</span>
-                    </div>
-                    <span>Ngân hàng TMCP Kỹ thương Việt Nam</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs">✓</span>
-                    </div>
-                    <span>Cục Thuế</span>
-                  </div>
-                </div>
-
-                <div className="border-t pt-4 text-xs text-gray-600">
-                  <p>11/10/2025 12:40:28</p>
-                </div>
-              </div>
-
-              {/* Page 2 Simulation */}
-              <div className="border-t-4 border-gray-300 pt-6 space-y-4">
-                <div className="text-center font-bold text-lg mb-6">GIẤY NỘP TIỀN VÀO NGÂN SÁCH NHÀ NƯỚC (Trang 2)</div>
-                <p className="text-gray-600">Nội dung trang 2 của chứng từ...</p>
-              </div>
-
-              {/* Page 3 Simulation */}
-              <div className="border-t-4 border-gray-300 pt-6 space-y-4">
-                <div className="text-center font-bold text-lg mb-6">GIẤY NỘP TIỀN VÀO NGÂN SÁCH NHÀ NƯỚC (Trang 3)</div>
-                <p className="text-gray-600">Nội dung trang 3 của chứng từ...</p>
-              </div>
-            </div>
+          {/* PDF Content Area - iframe */}
+          <div className="flex-1 overflow-hidden bg-gray-200">
+            <iframe
+              src={previewUrl}
+              className="w-full h-full border-0"
+              title="PDF Preview"
+            />
           </div>
 
           {/* PDF Footer */}
           <div className="bg-gray-100 px-4 py-3 flex items-center justify-between border-t border-gray-300">
-            <button className="text-gray-600 hover:text-gray-800">
+            <button
+              onClick={handleDownload}
+              className="text-gray-600 hover:text-gray-800"
+              title="Download PDF"
+            >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
                   d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-            </button>
-            <button className="text-gray-600 hover:text-gray-800">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
             </button>

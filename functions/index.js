@@ -682,6 +682,155 @@ exports.onMappingUpdate = functions.firestore
     }
   });
 
+// ===================================
+// TRANSACTION MANAGEMENT APIs
+// ===================================
+
+// Create Transaction
+exports.createTransaction = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    const claims = await verifyAdminToken(req);
+    const { mst, taxpayerName, taxpayerAddress, amount, paymentDate, status = 'pending', templateId } = req.body;
+
+    if (!mst || !taxpayerName || amount === undefined) {
+      return res.status(400).send('MST, taxpayerName và amount là bắt buộc');
+    }
+
+    // Lưu transaction với MST làm document ID
+    await admin.firestore().collection('transactions').doc(mst).set({
+      mst,
+      taxpayerName,
+      taxpayerAddress: taxpayerAddress || '',
+      amount: parseFloat(amount),
+      paymentDate: paymentDate ? admin.firestore.Timestamp.fromDate(new Date(paymentDate)) : admin.firestore.FieldValue.serverTimestamp(),
+      status,
+      templateId: templateId || '',
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdBy: claims.uid
+    });
+
+    res.status(201).json({
+      message: 'Transaction created successfully',
+      transactionId: mst
+    });
+  } catch (error) {
+    console.error('Error creating transaction:', error);
+    res.status(500).send(error.message || 'Không thể tạo transaction');
+  }
+});
+
+// Get Transactions
+exports.getTransactions = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'GET') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    await verifyAdminToken(req);
+
+    let query = admin.firestore().collection('transactions');
+
+    // Apply filters
+    if (req.query.mst) {
+      query = query.where('mst', '==', req.query.mst);
+    }
+    if (req.query.status) {
+      query = query.where('status', '==', req.query.status);
+    }
+
+    const snapshot = await query.get();
+    const transactions = [];
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      transactions.push({
+        id: doc.id,
+        mst: data.mst || doc.id,
+        taxpayerName: data.taxpayerName || '',
+        taxpayerAddress: data.taxpayerAddress || '',
+        amount: data.amount || 0,
+        paymentDate: data.paymentDate,
+        status: data.status || 'pending',
+        templateId: data.templateId || '',
+        createdAt: data.createdAt
+      });
+    });
+
+    // Sort by createdAt desc
+    transactions.sort((a, b) => {
+      if (!a.createdAt || !b.createdAt) return 0;
+      return b.createdAt.toMillis() - a.createdAt.toMillis();
+    });
+
+    res.json({ transactions });
+  } catch (error) {
+    console.error('Error getting transactions:', error);
+    res.status(500).send(error.message || 'Không thể lấy danh sách transactions');
+  }
+});
+
+// Update Transaction
+exports.updateTransaction = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'PUT') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    await verifyAdminToken(req);
+    const { transactionId, taxpayerName, taxpayerAddress, amount, paymentDate, status, templateId } = req.body;
+
+    if (!transactionId) {
+      return res.status(400).send('transactionId là bắt buộc');
+    }
+
+    const updateData = {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    if (taxpayerName !== undefined) updateData.taxpayerName = taxpayerName;
+    if (taxpayerAddress !== undefined) updateData.taxpayerAddress = taxpayerAddress;
+    if (amount !== undefined) updateData.amount = parseFloat(amount);
+    if (paymentDate !== undefined) updateData.paymentDate = admin.firestore.Timestamp.fromDate(new Date(paymentDate));
+    if (status !== undefined) updateData.status = status;
+    if (templateId !== undefined) updateData.templateId = templateId;
+
+    await admin.firestore().collection('transactions').doc(transactionId).update(updateData);
+
+    res.json({ message: 'Transaction updated successfully' });
+  } catch (error) {
+    console.error('Error updating transaction:', error);
+    res.status(500).send(error.message || 'Không thể cập nhật transaction');
+  }
+});
+
+// Delete Transaction
+exports.deleteTransaction = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'DELETE') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  try {
+    await verifyAdminToken(req);
+    const { transactionId } = req.query;
+
+    if (!transactionId) {
+      return res.status(400).send('transactionId là bắt buộc');
+    }
+
+    await admin.firestore().collection('transactions').doc(transactionId).delete();
+
+    res.json({ message: 'Transaction deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting transaction:', error);
+    res.status(500).send(error.message || 'Không thể xóa transaction');
+  }
+});
+
 module.exports = {
   verifyAdminToken,
   admin
