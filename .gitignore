@@ -46,3 +46,7 @@ temp_*
 # build artifacts
 .firebase/
 dist/
+
+# IDE and tool caches
+.qodo/
+.vscode/
