@@ -9,16 +9,16 @@ test.describe('Tra cứu chứng từ - Layout 5 cột', () => {
     });
     
     // Login trước khi test
-    await page.goto('http://localhost:3000/login', { waitUntil: 'networkidle' });
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830');
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123');
-    await page.click('button:has-text("Đăng nhập")');
+    await page.goto('/login', { waitUntil: 'networkidle' });
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
     await page.waitForURL(/\//, { timeout: 10000 });
   });
 
   test('Layout kết quả tra cứu - 5 cột dọc, không scroll ngang', async ({ page }) => {
     // Mở trang tra cứu chứng từ
-    await page.goto('http://localhost:3000/tra-cuu-chung-tu');
+    await page.goto('/tra-cuu-chung-tu');
     
     // Đợi trang load
     await page.waitForLoadState('networkidle');

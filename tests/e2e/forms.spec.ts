@@ -14,13 +14,14 @@ test.describe('Form Submissions', () => {
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 10000 });
     
     // Điền MST với timeout 5s
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830', { timeout: 5000 });
+    await page.waitForLoadState('domcontentloaded');
+    await page.getByTestId('mst-input').fill('00109202830', { timeout: 5000 });
     
     // Điền password với timeout 5s
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123', { timeout: 5000 });
+    await page.getByTestId('password-input').fill('test123', { timeout: 5000 });
     
     // Click submit với timeout 5s
-    await page.click('button:has-text("Đăng nhập")', { timeout: 5000 });
+    await page.getByTestId('login-button').click({ timeout: 5000 });
     
     // Đợi redirect với timeout 10s
     await expect(page).toHaveURL(/\//, { timeout: 10000 });

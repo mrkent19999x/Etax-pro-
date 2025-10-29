@@ -40,9 +40,10 @@ test.describe('Complete Flow Tests - All Pages', () => {
   test('Phase 2: Full Navigation Flow', async ({ page }) => {
     // Login first
     await page.goto('/login');
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830');
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123');
-    await page.click('button:has-text("Đăng nhập")');
+    await page.waitForLoadState('domcontentloaded');
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
     await page.waitForLoadState('networkidle');
     
     // Verify on home page
@@ -75,9 +76,10 @@ test.describe('Complete Flow Tests - All Pages', () => {
   test('Phase 3: Home Grid Navigation', async ({ page }) => {
     // Login first
     await page.goto('/login');
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830');
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123');
-    await page.click('button:has-text("Đăng nhập")');
+    await page.waitForLoadState('domcontentloaded');
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
     await page.waitForLoadState('networkidle');
 
     // Test service grid clicks
@@ -104,9 +106,10 @@ test.describe('Complete Flow Tests - All Pages', () => {
   test('Phase 4: Notification Flow', async ({ page }) => {
     // Login
     await page.goto('/login');
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830');
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123');
-    await page.click('button:has-text("Đăng nhập")');
+    await page.waitForLoadState('domcontentloaded');
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
     await page.waitForLoadState('networkidle');
 
     // Navigate to notifications
@@ -128,9 +131,10 @@ test.describe('Complete Flow Tests - All Pages', () => {
   test('Phase 5: Auth persistence across navigation', async ({ page }) => {
     // Login
     await page.goto('/login');
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830');
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123');
-    await page.click('button:has-text("Đăng nhập")');
+    await page.waitForLoadState('domcontentloaded');
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
     await page.waitForLoadState('networkidle');
 
     // Navigate to multiple pages

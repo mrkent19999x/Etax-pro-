@@ -10,15 +10,16 @@ test.describe('Authentication Flow', () => {
 
   test('Login Success - Should redirect to home page', async ({ page }) => {
     await page.goto('/login');
+    await page.waitForLoadState('domcontentloaded');
     
     // Điền MST
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830');
+    await page.getByTestId('mst-input').fill('00109202830');
     
     // Điền password
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123');
+    await page.getByTestId('password-input').fill('test123');
     
     // Click Đăng nhập
-    await page.click('button:has-text("Đăng nhập")');
+    await page.getByTestId('login-button').click();
     
     // Đợi redirect và render
     await page.waitForLoadState('networkidle');
@@ -53,9 +54,10 @@ test.describe('Authentication Flow', () => {
   test('Already Logged In - Should stay on home page', async ({ page }) => {
     // Login trước
     await page.goto('/login');
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830');
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123');
-    await page.click('button:has-text("Đăng nhập")');
+    await page.waitForLoadState('domcontentloaded');
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
     await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(/\//);
     

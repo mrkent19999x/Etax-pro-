@@ -21,63 +21,42 @@
 
 ---
 
-## ⚠️ Pending: Cloud Functions Deployment
+## ✅ API Routes - Dùng Firestore Trực Tiếp (FREE)
 
-### Yêu Cầu
-**Project `anhbao-373f3` cần upgrade lên Blaze plan (pay-as-you-go) để deploy Functions.**
+### Không Cần Functions - 100% Miễn Phí!
 
-### Các Functions Đã Code Sẵn:
-1. ✅ `test` - Test function
-2. ✅ `createUser` - Tạo user mới (admin only)
-3. ✅ `getUsers` - Lấy danh sách users (admin only)
-4. ✅ `updateUser` - Cập nhật user (admin only)
-5. ✅ `deleteUser` - Xóa user (admin only)
-6. ✅ `createTemplate` - Tạo template (admin only)
-7. ✅ `getTemplates` - Lấy danh sách templates
-8. ✅ `updateTemplate` - Cập nhật template (admin only)
-9. ✅ `deleteTemplate` - Xóa template (admin only)
-10. ✅ `createTransaction` - Tạo transaction (admin only)
-11. ✅ `getTransactions` - Lấy danh sách transactions
-12. ✅ `updateTransaction` - Cập nhật transaction (admin only)
-13. ✅ `deleteTransaction` - Xóa transaction (admin only)
-14. ✅ `getMapping` - Lấy mapping cho template
-15. ✅ `updateMapping` - Cập nhật mapping (admin only)
-16. ✅ `exportMapping` - Export mapping JSON
-17. ✅ `importMapping` - Import mapping JSON
-18. ✅ `generatePdf` - Generate PDF từ transaction data
-19. ✅ `onTransactionCreate` - Auto-trigger khi tạo transaction
-20. ✅ `onMappingUpdate` - Auto-trigger khi update mapping
+Tất cả API routes đã được refactor để dùng **Firestore trực tiếp** qua Next.js API Routes. Demo hoàn toàn FREE với Spark plan, không cần Blaze plan.
 
-### Để Deploy Functions:
+### Các API Đã Sẵn Sàng:
 
-1. **Upgrade Blaze Plan:**
-   - Visit: https://console.firebase.google.com/project/anhbao-373f3/usage/details
-   - Click "Upgrade to Blaze plan"
-   - Enter billing information (Free tier vẫn free cho hầu hết features)
-
-2. **Deploy Functions:**
-   ```bash
-   firebase deploy --only functions
-   ```
-
-3. **Verify Deployment:**
-   ```bash
-   firebase functions:list
-   ```
+1. ✅ `POST /api/createUser` - Tạo user mới (lưu Firestore)
+2. ✅ `GET /api/getUsers` - Lấy danh sách users
+3. ✅ `PUT /api/updateUser` - Cập nhật user
+4. ✅ `DELETE /api/deleteUser` - Xóa user
+5. ✅ `POST /api/createTemplate` - Tạo template
+6. ✅ `GET /api/getTemplates` - Lấy danh sách templates
+7. ✅ `PUT /api/updateTemplate` - Cập nhật template
+8. ✅ `DELETE /api/deleteTemplate` - Xóa template
+9. ✅ `GET /api/getMapping` - Lấy mapping cho template
+10. ✅ `PUT /api/updateMapping` - Cập nhật mapping
+11. ✅ `POST /api/importMapping` - Import mapping JSON
+12. ✅ `GET /api/exportMapping` - Export mapping JSON
+13. ✅ `POST /api/createTransaction` - Tạo transaction
+14. ✅ `GET /api/getTransactions` - Lấy danh sách transactions
+15. ✅ `GET /api/generatePdf` - Generate PDF (demo stub)
 
 ---
 
-## 📝 Next Steps Sau Khi Deploy Functions
+## 📝 Setup Environment Variable
 
-### 1. Setup Environment Variable
-Sau khi Functions deploy, lấy Functions URL và set trong `.env.local`:
+Chỉ cần Firebase config trong `.env.local`:
 ```env
-NEXT_PUBLIC_FUNCTIONS_URL=https://us-central1-anhbao-373f3.cloudfunctions.net
-```
-
-Hoặc dùng Firebase Emulators cho local dev:
-```bash
-firebase emulators:start --only functions,firestore
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=anhbao-373f3.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=anhbao-373f3
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=anhbao-373f3.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=...
 ```
 
 ### 2. Test Production
@@ -86,11 +65,13 @@ firebase emulators:start --only functions,firestore
 - ✅ Test permissions (admin vs user)
 - ✅ Test mapping system
 
-### 3. Create First Admin User
-Cần tạo user đầu tiên với role `admin` thông qua Firebase Console hoặc Functions:
-- Vào Firebase Console → Authentication
-- Tạo user mới
-- Vào Firestore → `users/{userId}` → Set `role: "admin"`
+### 2. Create First Admin User
+Tạo user đầu tiên với role `admin` qua API:
+```bash
+curl -X POST "http://localhost:3001/api/createUser" \
+  -H "Content-Type: application/json" \
+  -d '{"mst":"00109202830","password":"admin123","name":"Admin User","role":"admin","mstList":["00109202830"]}'
+```
 
 ---
 
@@ -100,8 +81,8 @@ Cần tạo user đầu tiên với role `admin` thông qua Firebase Console ho�
 |-----------|--------|-------|
 | Firestore Rules | ✅ Deployed | Active |
 | Firestore Indexes | ✅ Deployed | Building (1-3 phút) |
-| Cloud Functions | ⏳ Pending | Cần Blaze plan |
-| Next.js API Routes | ✅ Ready | Local dev OK |
+| Next.js API Routes | ✅ Ready | Dùng Firestore trực tiếp, FREE |
+| Firebase Hosting | ✅ Ready | Deploy với `firebase deploy --only hosting` |
 
 ---
 

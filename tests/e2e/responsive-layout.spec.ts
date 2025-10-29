@@ -4,9 +4,10 @@ test.describe('Responsive & Layout Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Login trước
     await page.goto('/login');
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830');
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123');
-    await page.click('button:has-text("Đăng nhập")');
+    await page.waitForLoadState('domcontentloaded');
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
     await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(/\//);
   });
