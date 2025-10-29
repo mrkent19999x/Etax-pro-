@@ -1,48 +1,58 @@
 "use client"
 
-import { useEffect } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 
-/**
- * HOC để bảo vệ route - giống như auth-guard.min.js trong dự án HTML
- * Kiểm tra localStorage và redirect về login nếu chưa đăng nhập
- */
-export function withAuth<T extends {}>(
-  Component: React.ComponentType<T>,
-  allowedPaths: string[] = ["/login"]
-) {
-  return function ProtectedComponent(props: T) {
-    const router = useRouter()
+type AuthStatus = "checking" | "authenticated" | "unauthenticated"
 
-    useEffect(() => {
-      // Check localStorage giống như auth-guard.min.js
-      const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"
-      
-      // Lấy current path
-      const currentPath = window.location.pathname
+interface UseAuthGuardOptions {
+  /**
+   * Các path không cần kiểm tra đăng nhập (ví dụ /login).
+   */
+  allowedPaths?: string[]
+}
 
-      // Nếu không đăng nhập và không phải page được phép → redirect
-      if (!isLoggedIn && !allowedPaths.includes(currentPath)) {
-        router.push("/login")
-      }
-    }, [router])
-
-    return <Component {...props} />
-  }
+interface UseAuthGuardReturn {
+  isAuthenticated: boolean
+  isChecking: boolean
 }
 
 /**
- * Hook để check auth status
+ * Hook kiểm tra trạng thái đăng nhập và redirect về /login khi cần.
+ * Trả về trạng thái để UI có thể chờ trước khi render nội dung nhạy cảm.
  */
-export function useAuthGuard() {
+export function useAuthGuard(options: UseAuthGuardOptions = {}): UseAuthGuardReturn {
   const router = useRouter()
+  const { allowedPaths = ["/login"] } = options
+  const [status, setStatus] = useState<AuthStatus>("checking")
+
+  const allowedLookup = useMemo(() => new Set(allowedPaths), [allowedPaths])
+
+  const redirectToLogin = useCallback(() => {
+    if (typeof window === "undefined") return
+
+    const currentPath = window.location.pathname
+    if (!allowedLookup.has(currentPath)) {
+      router.replace("/login")
+    }
+  }, [allowedLookup, router])
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"
-    
-    if (!isLoggedIn) {
-      router.push("/login")
-    }
-  }, [router])
-}
+    if (typeof window === "undefined") return
 
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"
+
+    if (isLoggedIn) {
+      setStatus("authenticated")
+      return
+    }
+
+    setStatus("unauthenticated")
+    redirectToLogin()
+  }, [redirectToLogin])
+
+  return {
+    isAuthenticated: status === "authenticated",
+    isChecking: status === "checking",
+  }
+}

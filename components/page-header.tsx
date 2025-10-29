@@ -13,8 +13,15 @@ export function PageHeader({ title, showNotification = true }: PageHeaderProps) 
   const router = useRouter()
 
   return (
-    <header className="sticky top-0 z-50 bg-[#DC143C] text-white px-4 py-3 flex items-center justify-between">
-      <button onClick={() => router.back()} className="p-2 hover:bg-red-700 rounded-lg transition">
+    <header 
+      className="sticky top-0 z-50 bg-[#b71c1c] text-white px-4 py-3 flex items-center justify-between"
+      style={{ 
+        height: "100px",
+        paddingTop: "max(12px, env(safe-area-inset-top, 0px))",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
+      }}
+    >
+      <button onClick={() => router.back()} className="p-2 hover:opacity-80 transition">
         <ChevronLeft size={24} />
       </button>
 
@@ -22,11 +29,11 @@ export function PageHeader({ title, showNotification = true }: PageHeaderProps) 
 
       <div className="flex gap-2">
         {showNotification && (
-          <Link href="/thong-bao" className="p-2 hover:bg-red-700 rounded-lg transition">
+          <Link href="/thong-bao" className="p-2 hover:opacity-80 transition">
             <Bell size={24} />
           </Link>
         )}
-        <Link href="/" className="p-2 hover:bg-red-700 rounded-lg transition">
+        <Link href="/" className="p-2 hover:opacity-80 transition">
           <Home size={24} />
         </Link>
       </div>

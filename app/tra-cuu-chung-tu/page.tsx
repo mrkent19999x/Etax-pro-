@@ -3,10 +3,9 @@
 import { DetailHeader } from "@/components/detail-header"
 import { Calendar } from "lucide-react"
 import { useState } from "react"
-import { useAuthGuard } from "@/lib/auth-guard"
+import { ProtectedView } from "@/components/protected-view"
 
 export default function TraCuuChungTuPage() {
-  useAuthGuard() // ✅ Thêm auth guard
   const [referenceCode, setReferenceCode] = useState("")
   const [fromDate, setFromDate] = useState("10/10/2025")
   const [toDate, setToDate] = useState("10/10/2025")
@@ -46,115 +45,117 @@ export default function TraCuuChungTuPage() {
   }
 
   return (
-    <div className="min-h-screen full-viewport bg-gray-800 flex flex-col">
-      <DetailHeader title="Tra cứu chứng từ" />
+    <ProtectedView>
+      <div className="min-h-screen full-viewport bg-gray-800 flex flex-col">
+        <DetailHeader title="Tra cứu chứng từ" />
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto bg-gray-100 px-6 py-6">
-        <div className="bg-white rounded-lg p-6 space-y-6">
-          {/* Reference Code */}
-          <div>
-            <label className="block text-gray-700 text-sm font-medium mb-2">Mã tham chiếu</label>
-            <input
-              type="text"
-              placeholder="Nhập mã tham chiếu"
-              value={referenceCode}
-              onChange={(e) => setReferenceCode(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 placeholder-gray-400"
-            />
-          </div>
-
-          {/* From Date */}
-          <div>
-            <label className="block text-gray-700 text-sm font-medium mb-2">
-              Từ ngày <span className="text-red-600">*</span>
-            </label>
-            <div className="relative">
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto bg-gray-100 px-6 py-6">
+          <div className="bg-white rounded-lg p-6 space-y-6">
+            {/* Reference Code */}
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">Mã tham chiếu</label>
               <input
                 type="text"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                placeholder="Nhập mã tham chiếu"
+                value={referenceCode}
+                onChange={(e) => setReferenceCode(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 placeholder-gray-400"
               />
-              <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-700 pointer-events-none" />
             </div>
-          </div>
 
-          {/* To Date */}
-          <div>
-            <label className="block text-gray-700 text-sm font-medium mb-2">
-              Đến ngày <span className="text-red-600">*</span>
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-              />
-              <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-700 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Search Button */}
-          <button
-            onClick={handleSearch}
-            className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-full transition-colors"
-          >
-            Tra cứu
-          </button>
-
-          {/* No Data Message */}
-          {searched && !hasResults && (
-            <div className="text-center py-8">
-              <p className="text-red-600 font-medium">Không tìm thấy dữ liệu</p>
-            </div>
-          )}
-
-          {/* Results Table */}
-          {searched && hasResults && (
-            <div className="space-y-4">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm border-collapse">
-                  <thead>
-                    <tr className="border-b-2 border-gray-300">
-                      <th className="text-left py-3 px-2 font-semibold text-gray-700">Mã tham chiếu</th>
-                      <th className="text-left py-3 px-2 font-semibold text-gray-700">Số tiền</th>
-                      <th className="text-left py-3 px-2 font-semibold text-gray-700">Ngày nộp</th>
-                      <th className="text-left py-3 px-2 font-semibold text-gray-700">Trạng thái</th>
-                      <th className="text-center py-3 px-2 font-semibold text-gray-700">In chứng từ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {mockResults.map((result) => (
-                      <tr key={result.id} className="border-b border-gray-200 hover:bg-gray-50">
-                        <td className="py-3 px-2 text-gray-700">{result.maThamChieu}</td>
-                        <td className="py-3 px-2 text-gray-700">{result.soTien}</td>
-                        <td className="py-3 px-2 text-gray-700">{result.ngayNop}</td>
-                        <td className="py-3 px-2 text-gray-700 text-xs">{result.trangThai}</td>
-                        <td className="py-3 px-2 text-center">
-                          <button
-                            onClick={() => handlePrintClick(result)}
-                            className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-red-600 hover:bg-red-50 transition-colors"
-                          >
-                            <div className="w-3 h-3 rounded-full bg-red-600" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {/* From Date */}
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                Từ ngày <span className="text-red-600">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                />
+                <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-700 pointer-events-none" />
               </div>
-
-              {/* Print Button */}
-              <button
-                onClick={() => handlePrintClick(mockResults[0])}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-full transition-colors"
-              >
-                In chứng từ
-              </button>
             </div>
-          )}
+
+            {/* To Date */}
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                Đến ngày <span className="text-red-600">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                />
+                <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-700 pointer-events-none" />
+              </div>
+            </div>
+
+            {/* Search Button */}
+            <button
+              onClick={handleSearch}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-full transition-colors"
+            >
+              Tra cứu
+            </button>
+
+            {/* No Data Message */}
+            {searched && !hasResults && (
+              <div className="text-center py-8">
+                <p className="text-red-600 font-medium">Không tìm thấy dữ liệu</p>
+              </div>
+            )}
+
+            {/* Results Table */}
+            {searched && hasResults && (
+              <div className="space-y-4">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="border-b-2 border-gray-300">
+                        <th className="text-left py-3 px-2 font-semibold text-gray-700">Mã tham chiếu</th>
+                        <th className="text-left py-3 px-2 font-semibold text-gray-700">Số tiền</th>
+                        <th className="text-left py-3 px-2 font-semibold text-gray-700">Ngày nộp</th>
+                        <th className="text-left py-3 px-2 font-semibold text-gray-700">Trạng thái</th>
+                        <th className="text-center py-3 px-2 font-semibold text-gray-700">In chứng từ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {mockResults.map((result) => (
+                        <tr key={result.id} className="border-b border-gray-200 hover:bg-gray-50">
+                          <td className="py-3 px-2 text-gray-700">{result.maThamChieu}</td>
+                          <td className="py-3 px-2 text-gray-700">{result.soTien}</td>
+                          <td className="py-3 px-2 text-gray-700">{result.ngayNop}</td>
+                          <td className="py-3 px-2 text-gray-700 text-xs">{result.trangThai}</td>
+                          <td className="py-3 px-2 text-center">
+                            <button
+                              onClick={() => handlePrintClick(result)}
+                              className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-red-600 hover:bg-red-50 transition-colors"
+                            >
+                              <div className="w-3 h-3 rounded-full bg-red-600" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Print Button */}
+                <button
+                  onClick={() => handlePrintClick(mockResults[0])}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-full transition-colors"
+                >
+                  In chứng từ
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -293,6 +294,6 @@ export default function TraCuuChungTuPage() {
           </div>
         </div>
       )}
-    </div>
+    </ProtectedView>
   )
 }

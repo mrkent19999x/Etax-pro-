@@ -8,9 +8,20 @@ export default function AccountInfoPage() {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen full-viewport bg-gray-100 flex flex-col">
+    <div 
+      className="phone-frame relative min-h-screen"
+      style={{ 
+        backgroundImage: "url('/assets/sidebar/nen.png')", 
+        backgroundSize: 'cover', 
+        backgroundPosition: 'center', 
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       {/* Header */}
-      <div className="bg-red-700 px-6 py-4 flex items-center justify-between">
+      <header
+        className="bg-[#b71c1c] px-6 py-4 flex items-center justify-between"
+        style={{ paddingTop: "max(12px, env(safe-area-inset-top, 0px))", height: "100px", boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}
+      >
         <button onClick={() => router.back()} className="hover:opacity-80 transition-opacity">
           <ChevronLeft className="w-6 h-6 text-white" />
         </button>
@@ -18,10 +29,10 @@ export default function AccountInfoPage() {
         <Link href="/">
           <Home className="w-6 h-6 text-white cursor-pointer hover:opacity-80 transition-opacity" />
         </Link>
-      </div>
+      </header>
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto px-4 py-6 pb-20">
         {/* Profile Section */}
         <div className="bg-gray-700 px-6 py-8 flex flex-col items-center gap-6">
           {/* Avatar */}
@@ -53,7 +64,7 @@ export default function AccountInfoPage() {
         </div>
 
         {/* Account Information */}
-        <div className="px-6 py-6">
+        <div className="mx-auto bg-white rounded-2xl px-6 py-6 shadow-sm mb-6" style={{ maxWidth: "355px" }}>
           <h2 className="text-lg font-bold text-gray-800 mb-6">Thông tin tài khoản</h2>
 
           <div className="space-y-6">
