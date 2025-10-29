@@ -128,11 +128,24 @@ export function useFirebaseAuth() {
     }
   }
 
+  // Helper function to check if user is admin
+  const isAdmin = () => {
+    return state.userData?.role === 'admin'
+  }
+
+  // Helper function to check if user has access to MST
+  const canAccessMst = (mst: string) => {
+    if (isAdmin()) return true
+    return state.userData?.mstList?.includes(mst) || state.userData?.mst === mst
+  }
+
   return {
     ...state,
     login,
     register,
-    logout
+    logout,
+    isAdmin,
+    canAccessMst
   }
 }
 

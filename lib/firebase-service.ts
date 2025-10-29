@@ -190,6 +190,8 @@ export interface UserData {
   email?: string
   phone?: string
   avatar?: string
+  role?: "admin" | "user"
+  mstList?: string[]
   createdAt?: any
   updatedAt?: any
 }
@@ -217,6 +219,27 @@ export async function getUserData(userId: string): Promise<UserData | null> {
  */
 export async function updateUserData(userId: string, updates: Partial<UserData>): Promise<void> {
   return updateDocument("users", userId, updates)
+}
+
+/**
+ * Cập nhật role của user
+ */
+export async function updateUserRole(userId: string, role: "admin" | "user"): Promise<void> {
+  return updateDocument("users", userId, { role })
+}
+
+/**
+ * Cập nhật danh sách MST của user
+ */
+export async function updateUserMstList(userId: string, mstList: string[]): Promise<void> {
+  return updateDocument("users", userId, { mstList })
+}
+
+/**
+ * Lấy danh sách users theo role
+ */
+export async function getUsersByRole(role: "admin" | "user"): Promise<UserData[]> {
+  return queryDocuments("users", "role", "==", role)
 }
 
 // ===================================

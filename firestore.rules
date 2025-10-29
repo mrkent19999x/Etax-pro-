@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Helper function to check if user owns the MST or is admin
+    function canAccessMst(mst) {
+      return isAdmin() || 
+        mst in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.mstList;
+    }
+
+    // Users collection - admin only for write, users can read their own data
+    match /users/{userId} {
+      allow read: if request.auth != null && (isAdmin() || request.auth.uid == userId);
+      allow write: if isAdmin();
+    }
+
+    // Templates collection - admin only
+    match /templates/{templateId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // Mappings collection - admin only
+    match /mappings/{mappingId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // Transactions collection - users can read their MST, admin can read all
+    match /transactions/{mst} {
+      allow read: if request.auth != null && (isAdmin() || canAccessMst(mst));
+      allow write: if isAdmin();
+    }
+  }
+}
+
