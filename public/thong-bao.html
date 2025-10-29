@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông báo - eTax Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: #667eea;
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: #667eea;
+        }
+
+        .tabs {
+            background: white;
+            padding: 0 1rem;
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab {
+            padding: 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .notification-list {
+            padding: 1rem;
+        }
+
+        .notification-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .notification-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .notification-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-content {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .badge {
+            background: #e9ecef;
+            color: #6c757d;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="back-btn" onclick="history.back()">‹</button>
+            <div class="header-title">Thông báo</div>
+        </div>
+        <button class="notification-btn">🔔</button>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" data-tab="admin">Hành chính</div>
+        <div class="tab" data-tab="tax">Biến động nghĩa vụ</div>
+        <div class="tab" data-tab="other">Khác</div>
+    </div>
+
+    <!-- Notification List -->
+    <div class="notification-list" id="notificationList">
+        <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <div>Loading notifications...</div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = '/login';
+        }
+
+        let notifications = [];
+        let currentTab = 'admin';
+
+        // Load notifications
+        async function loadNotifications() {
+            try {
+                const response = await fetch('/api/notifications');
+                const data = await response.json();
+                notifications = data;
+                renderNotifications();
+            } catch (error) {
+                console.error('Failed to load notifications:', error);
+                document.getElementById('notificationList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <div>Không thể tải thông báo</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Render notifications
+        function renderNotifications() {
+            const filteredNotifications = notifications.filter(notification => {
+                if (currentTab === 'admin') return notification.type === 'admin';
+                if (currentTab === 'tax') return notification.type === 'tax';
+                return notification.type === 'other';
+            });
+
+            const notificationList = document.getElementById('notificationList');
+
+            if (filteredNotifications.length === 0) {
+                notificationList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div>Không có thông báo nào</div>
+                    </div>
+                `;
+                return;
+            }
+
+            notificationList.innerHTML = filteredNotifications.map(notification => `
+                <div class="notification-item" onclick="viewNotification(${notification.id})">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-date">${notification.date}</div>
+                    <div class="notification-content">${notification.content.substring(0, 100)}...</div>
+                </div>
+            `).join('');
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+                // Add active class to clicked tab
+                tab.classList.add('active');
+
+                // Update current tab
+                currentTab = tab.dataset.tab;
+
+                // Re-render notifications
+                renderNotifications();
+            });
+        });
+
+        // View notification detail
+        function viewNotification(id) {
+            // For demo purposes, just show an alert
+            const notification = notifications.find(n => n.id === id);
+            if (notification) {
+                alert(`Thông báo: ${notification.title}\n\n${notification.content}`);
+            }
+        }
+
+        // Load notifications on page load
+        loadNotifications();
+    </script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eTax Mobile - Trang chủ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: left 0.3s;
+            z-index: 1000;
+            padding: 2rem 1rem;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-info {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #555;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .sidebar-menu a:hover {
+            background: #f8f9fa;
+            color: #667eea;
+        }
+
+        .sidebar-menu .logout {
+            color: #e74c3c;
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        .main-content {
+            padding: 1rem;
+        }
+
+        .profile-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .profile-arrow {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .carousel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .carousel-title {
+            font-weight: 600;
+        }
+
+        .carousel-btn {
+            background: #f8f9fa;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .carousel-btn:hover {
+            background: #e9ecef;
+        }
+
+        .carousel-items {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+        }
+
+        .carousel-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            min-width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .carousel-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .carousel-item-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .carousel-item-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .service-grid {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .service-grid-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .service-item {
+            background: #f8f9fa;
+            padding: 1.5rem 1rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .service-item:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .service-item-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .service-item-desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+
+            .service-grid-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="user-info" id="userInfo">Loading...</div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li><a href="/">🏠 Trang chủ</a></li>
+            <li><a href="/thong-bao">🔔 Thông báo</a></li>
+            <li><a href="/khai-thue">📊 Khai thuế</a></li>
+            <li><a href="/hoa-don-dien-tu">📄 Hóa đơn điện tử</a></li>
+            <li><a href="/thong-tin-tai-khoan">👤 Tài khoản</a></li>
+            <li><a href="#" class="logout" id="logoutBtn">🚪 Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">eTax Mobile</div>
+        <button class="menu-btn" id="menuBtn">☰</button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Profile Card -->
+        <div class="profile-card" id="profileCard">
+            <div class="profile-info">
+                <h3 id="userName">Loading...</h3>
+                <p id="userMst">MST: Loading...</p>
+            </div>
+            <div class="profile-arrow">›</div>
+        </div>
+
+        <!-- Carousel -->
+        <div class="carousel">
+            <div class="carousel-controls">
+                <div class="carousel-title">Chức năng hay dùng</div>
+                <div>
+                    <button class="carousel-btn" id="prevBtn">‹</button>
+                    <button class="carousel-btn" id="nextBtn">›</button>
+                </div>
+            </div>
+            <div class="carousel-items" id="carouselItems">
+                <div class="carousel-item" data-link="/khai-thue">
+                    <div class="carousel-item-icon">📊</div>
+                    <div class="carousel-item-title">Khai thuế CNKD</div>
+                </div>
+                <div class="carousel-item" data-link="/thong-bao">
+                    <div class="carousel-item-icon">📋</div>
+                    <div class="carousel-item-title">Tra cứu thông báo</div>
+                </div>
+                <div class="carousel-item" data-link="/hoa-don-dien-tu">
+                    <div class="carousel-item-icon">📄</div>
+                    <div class="carousel-item-title">Hóa đơn điện tử</div>
+                </div>
+                <div class="carousel-item" data-link="/thong-tin-nguoi-phu-thuoc">
+                    <div class="carousel-item-icon">👥</div>
+                    <div class="carousel-item-title">Tra cứu người phụ thuộc</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Grid -->
+        <div class="service-grid">
+            <div class="section-title">Danh sách nhóm dịch vụ</div>
+            <div class="service-grid-items" id="serviceGrid">
+                <div class="service-item" data-link="/thong-bao">
+                    <div class="service-item-icon">📋</div>
+                    <div class="service-item-title">Tra cứu thông báo</div>
+                    <div class="service-item-desc">Tra cứu thông báo thuế</div>
+                </div>
+                <div class="service-item" data-link="/khai-thue">
+                    <div class="service-item-icon">📊</div>
+                    <div class="service-item-title">Khai thuế</div>
+                    <div class="service-item-desc">Khai thuế cá nhân</div>
+                </div>
+                <div class="service-item" data-link="/hoa-don-dien-tu">
+                    <div class="service-item-icon">📄</div>
+                    <div class="service-item-title">Hóa đơn điện tử</div>
+                    <div class="service-item-desc">Quản lý hóa đơn</div>
+                </div>
+                <div class="service-item" data-link="/thong-tin-tai-khoan">
+                    <div class="service-item-icon">👤</div>
+                    <div class="service-item-title">Tài khoản</div>
+                    <div class="service-item-desc">Thông tin tài khoản</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check authentication
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = '/login';
+        }
+
+        // Load user info
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        document.getElementById('userInfo').textContent = user.name || 'User';
+        document.getElementById('userName').textContent = user.name || 'Loading...';
+        document.getElementById('userMst').textContent = `MST: ${user.mst || 'Loading...'}`;
+
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const menuBtn = document.getElementById('menuBtn');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.add('active');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        });
+
+        // Navigation
+        document.querySelectorAll('.carousel-item, .service-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const link = item.dataset.link;
+                if (link) {
+                    window.location.href = link;
+                }
+            });
+        });
+
+        // Profile card navigation
+        document.getElementById('profileCard').addEventListener('click', () => {
+            window.location.href = '/thong-tin-tai-khoan';
+        });
+
+        // Carousel controls
+        const carouselItems = document.getElementById('carouselItems');
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            carouselItems.scrollBy({ left: 150, behavior: 'smooth' });
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            carouselItems.scrollBy({ left: -150, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
