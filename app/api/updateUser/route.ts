@@ -1,35 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-const FUNCTIONS_BASE = process.env.NEXT_PUBLIC_FUNCTIONS_URL
-  || `http://localhost:5001/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'etax-7fbf8'}/us-central1`
+import { updateDocument } from '@/lib/firebase-service'
 
 export async function PUT(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  const body = await request.json()
-
   try {
-    const response = await fetch(`${FUNCTIONS_BASE}/updateUser`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(authHeader && { Authorization: authHeader }),
-      },
-      body: JSON.stringify(body),
-    })
+    const body = await request.json()
+    const { mst, data } = body || {}
 
-    const text = await response.text()
-    try {
-      const json = JSON.parse(text)
-      return NextResponse.json(json, { status: response.status })
-    } catch {
-      return NextResponse.json({ message: text }, { status: response.status })
+    if (!mst || !data) {
+      return NextResponse.json({ error: 'Thiếu mst hoặc data' }, { status: 400 })
     }
+
+    await updateDocument('users', mst, data)
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error proxying updateUser:', error)
-    return NextResponse.json(
-      { error: 'Lỗi khi gọi API' },
-      { status: 500 }
-    )
+    console.error('Error updating user:', error)
+    return NextResponse.json({ error: 'Không cập nhật được user' }, { status: 500 })
   }
 }
 

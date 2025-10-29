@@ -1,27 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getAllDocuments } from '@/lib/firebase-service'
 
-const FUNCTIONS_BASE = process.env.NEXT_PUBLIC_FUNCTIONS_URL
-  || `http://localhost:5001/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'etax-7fbf8'}/us-central1`
-
-export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-
+export async function GET(_request: NextRequest) {
   try {
-    const response = await fetch(`${FUNCTIONS_BASE}/getUsers`, {
-      method: 'GET',
-      headers: {
-        ...(authHeader && { Authorization: authHeader }),
-      },
-    })
-
-    const data = await response.json()
-    return NextResponse.json(data, { status: response.status })
+    const users = await getAllDocuments('users')
+    return NextResponse.json({ users })
   } catch (error) {
-    console.error('Error proxying getUsers:', error)
-    return NextResponse.json(
-      { error: 'Lỗi khi gọi API' },
-      { status: 500 }
-    )
+    console.error('Error getting users:', error)
+    return NextResponse.json({ error: 'Không lấy được danh sách users' }, { status: 500 })
   }
 }
 

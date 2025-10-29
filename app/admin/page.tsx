@@ -23,12 +23,12 @@ export default function AdminDashboardPage() {
     return null // useRequireAdmin sẽ redirect
   }
 
-  const stats = [
-    { label: "Tổng Users", value: "-", icon: Users, color: "bg-blue-500", href: "/admin/users" },
-    { label: "Templates", value: "-", icon: FileText, color: "bg-green-500", href: "/admin/templates" },
-    { label: "Mappings", value: "-", icon: MapPin, color: "bg-yellow-500", href: "/admin/mappings" },
-    { label: "Transactions", value: "-", icon: Receipt, color: "bg-purple-500", href: "/admin/transactions" },
-  ]
+const stats = [
+  { label: "Tổng Users", value: "1000", icon: Users, color: "bg-blue-500", href: "/admin/users" },
+  { label: "Templates", value: "50", icon: FileText, color: "bg-green-500", href: "/admin/templates" },
+  { label: "Mappings", value: "200", icon: MapPin, color: "bg-yellow-500", href: "/admin/mappings" },
+  { label: "Transactions", value: "500", icon: Receipt, color: "bg-purple-500", href: "/admin/transactions" },
+]
 
   return (
     <AdminLayout>
@@ -51,7 +51,7 @@ export default function AdminDashboardPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">{stat.label}</p>
-                    <p className="text-2xl font-bold mt-2">{stat.value}</p>
+                    <p className="text-2xl font-bold mt-2">{stat.value.toString()}</p>
                   </div>
                   <div className={`${stat.color} p-3 rounded-lg`}>
                     <Icon className="text-white" size={24} />
@@ -88,4 +88,3 @@ export default function AdminDashboardPage() {
     </AdminLayout>
   )
 }
-

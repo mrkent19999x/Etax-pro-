@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-const FUNCTIONS_BASE = process.env.NEXT_PUBLIC_FUNCTIONS_URL
-  || `http://localhost:5001/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'etax-7fbf8'}/us-central1`
+import { getDocument } from '@/lib/firebase-service'
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
   const searchParams = request.nextUrl.searchParams
   const templateId = searchParams.get('templateId')
 
@@ -13,17 +10,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const response = await fetch(`${FUNCTIONS_BASE}/getMapping?templateId=${templateId}`, {
-      method: 'GET',
-      headers: {
-        ...(authHeader && { Authorization: authHeader }),
-      },
-    })
-
-    return NextResponse.json(await response.json(), { status: response.status })
+    const mapping = await getDocument('mappings', templateId)
+    return NextResponse.json({ mapping: mapping || {} })
   } catch (error) {
-    console.error('Error proxying getMapping:', error)
-    return NextResponse.json({ error: 'Lỗi khi gọi API' }, { status: 500 })
+    console.error('Error getting mapping:', error)
+    return NextResponse.json({ error: 'Không lấy được mapping' }, { status: 500 })
   }
 }
 

@@ -1,31 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-const FUNCTIONS_BASE = process.env.NEXT_PUBLIC_FUNCTIONS_URL
-  || `http://localhost:5001/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'etax-7fbf8'}/us-central1`
+import { saveDocument, serverTimestamp } from '@/lib/firebase-service'
 
 export async function POST(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  const body = await request.json()
-
   try {
-    const response = await fetch(`${FUNCTIONS_BASE}/createTransaction`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(authHeader && { Authorization: authHeader }),
-      },
-      body: JSON.stringify(body),
-    })
-
-    const text = await response.text()
-    try {
-      return NextResponse.json(JSON.parse(text), { status: response.status })
-    } catch {
-      return NextResponse.json({ message: text }, { status: response.status })
+    const body = await request.json()
+    const { mst, templateId, amount, note } = body || {}
+    if (!mst || !templateId || amount == null) {
+      return NextResponse.json({ error: 'Thiếu mst, templateId hoặc amount' }, { status: 400 })
     }
+    const txId = `${mst}_${Date.now()}`
+    await saveDocument('transactions', txId, {
+      transactionId: txId,
+      mst,
+      templateId,
+      amount,
+      note: note || '',
+      createdAt: serverTimestamp(),
+    })
+    return NextResponse.json({ success: true, transactionId: txId })
   } catch (error) {
-    console.error('Error proxying createTransaction:', error)
-    return NextResponse.json({ error: 'Lỗi khi gọi API' }, { status: 500 })
+    console.error('Error creating transaction:', error)
+    return NextResponse.json({ error: 'Không tạo được transaction' }, { status: 500 })
   }
 }
-

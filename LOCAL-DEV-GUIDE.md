@@ -30,12 +30,18 @@ Lệnh này sẽ start:
 
 ### 2. Set Environment Variable cho Next.js:
 
-Tạo file `.env.local` trong root project:
+Tạo file `.env.local` trong root project với Firebase config từ Web App:
 
 ```env
-NEXT_PUBLIC_FUNCTIONS_URL=http://localhost:5001/etax-7fbf8/us-central1
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=etax-7fbf8
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=anhbao-373f3.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=anhbao-373f3
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=anhbao-373f3.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=...
 ```
+
+**Lưu ý**: Tất cả API routes dùng Firestore trực tiếp, KHÔNG cần Functions. Demo hoàn toàn FREE với Spark plan.
 
 ### 3. Start Next.js Dev Server (terminal khác):
 
@@ -82,7 +88,7 @@ firebase emulators:start --only firestore --import=./firestore-export
 ### Export Emulator Data:
 ```bash
 # Export khi emulators đang chạy
-curl http://localhost:4000/emulator/v1/projects/etax-7fbf8/databases/(default)/data
+curl http://localhost:4000/emulator/v1/projects/anhbao-373f3/databases/(default)/data
 ```
 
 ### Clear Emulator Data:

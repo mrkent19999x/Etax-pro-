@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const FUNCTIONS_BASE = process.env.NEXT_PUBLIC_FUNCTIONS_URL
-  || `http://localhost:5001/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'etax-7fbf8'}/us-central1`
+  || `http://localhost:5001/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'anhbao-373f3'}/us-central1`
 
 export async function PUT(request: NextRequest) {
   const authHeader = request.headers.get('authorization')

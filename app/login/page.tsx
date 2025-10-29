@@ -82,6 +82,7 @@ export default function LoginPage() {
                 className="flex-1 bg-transparent text-white text-base py-2 outline-none placeholder:text-white/70"
                 autoComplete="off"
                 style={{ touchAction: 'manipulation' }}
+                data-testid="mst-input"
               />
             </div>
             <div className="h-px bg-white/80 mt-0" />
@@ -105,6 +106,7 @@ export default function LoginPage() {
                 className="flex-1 bg-transparent text-white text-base py-2 outline-none placeholder:text-white/70"
                 autoComplete="off"
                 style={{ touchAction: 'manipulation' }}
+                data-testid="password-input"
               />
               <button
                 type="button"
@@ -147,6 +149,7 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full h-[52px] rounded-[28px] bg-[#DC143C] text-white font-bold text-base tracking-wide hover:bg-red-700 active:scale-[0.98] disabled:opacity-50 transition-all flex items-center justify-center"
               style={{ touchAction: 'manipulation' }}
+              data-testid="login-button"
             >
               {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
             </button>

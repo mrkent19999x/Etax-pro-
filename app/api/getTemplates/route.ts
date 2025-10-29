@@ -1,23 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getAllDocuments } from '@/lib/firebase-service'
 
-const FUNCTIONS_BASE = process.env.NEXT_PUBLIC_FUNCTIONS_URL
-  || `http://localhost:5001/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'etax-7fbf8'}/us-central1`
-
-export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-
+export async function GET(_request: NextRequest) {
   try {
-    const response = await fetch(`${FUNCTIONS_BASE}/getTemplates`, {
-      method: 'GET',
-      headers: {
-        ...(authHeader && { Authorization: authHeader }),
-      },
-    })
-
-    return NextResponse.json(await response.json(), { status: response.status })
+    const templates = await getAllDocuments('templates')
+    return NextResponse.json({ templates })
   } catch (error) {
-    console.error('Error proxying getTemplates:', error)
-    return NextResponse.json({ error: 'Lỗi khi gọi API' }, { status: 500 })
+    console.error('Error getting templates:', error)
+    return NextResponse.json({ error: 'Không lấy được templates' }, { status: 500 })
   }
 }
 

@@ -56,8 +56,8 @@ Truy cập: http://localhost:3000
 
 File `.env.local` đã được tạo với config cho emulators:
 ```env
-NEXT_PUBLIC_FUNCTIONS_URL=http://localhost:5001/etax-7fbf8/us-central1
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=etax-7fbf8
+NEXT_PUBLIC_FUNCTIONS_URL=http://localhost:5001/anhbao-373f3/us-central1
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=anhbao-373f3
 ```
 
 ---

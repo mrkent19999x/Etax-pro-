@@ -11,11 +11,11 @@
   },
   "servers": [
     {
-      "url": "https://us-central1-etax-7fbf8.cloudfunctions.net",
+      "url": "https://us-central1-anhbao-373f3.cloudfunctions.net",
       "description": "Production server"
     },
     {
-      "url": "http://localhost:5001/etax-7fbf8/us-central1",
+      "url": "http://localhost:5001/anhbao-373f3/us-central1",
       "description": "Local development"
     }
   ],
