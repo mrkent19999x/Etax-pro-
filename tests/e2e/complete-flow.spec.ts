@@ -30,9 +30,11 @@ test.describe('Complete Flow Tests - All Pages', () => {
     ];
 
     for (const route of protectedPages) {
-      await page.goto(route);
-      // Should redirect to login if not logged in
-      await expect(page).toHaveURL(/\/login/, { timeout: 5000 });
+      // Đợi redirect hoàn tất bằng cách đợi URL thay đổi
+      await Promise.all([
+        page.waitForURL(/\/login/, { timeout: 15000 }),
+        page.goto(route)
+      ]);
       console.log(`✅ ${route} redirects to login correctly`);
     }
   });
@@ -40,19 +42,21 @@ test.describe('Complete Flow Tests - All Pages', () => {
   test('Phase 2: Full Navigation Flow', async ({ page }) => {
     // Login first
     await page.goto('/login');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
     await page.getByTestId('mst-input').fill('00109202830');
     await page.getByTestId('password-input').fill('test123');
     await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
     
     // Verify on home page
     await expect(page).toHaveURL(/\//);
-    await expect(page.locator('text=TỬ XUÂN CHIẾN')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText('TỬ XUÂN CHIẾN', { exact: true }).first()).toBeVisible({ timeout: 5000 });
 
     // Test sidebar navigation
     await page.click('button svg.lucide-menu');
-    await expect(page.locator('text=TỬ XUÂN CHIẾN')).toBeVisible();
+    await expect(page.locator('text=TỬ XUÂN CHIẾN').first()).toBeVisible();
     
     // Navigate to different pages via sidebar
     const sidebarRoutes = [
@@ -76,10 +80,12 @@ test.describe('Complete Flow Tests - All Pages', () => {
   test('Phase 3: Home Grid Navigation', async ({ page }) => {
     // Login first
     await page.goto('/login');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
     await page.getByTestId('mst-input').fill('00109202830');
     await page.getByTestId('password-input').fill('test123');
     await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
 
     // Test service grid clicks
@@ -112,9 +118,13 @@ test.describe('Complete Flow Tests - All Pages', () => {
     await page.getByTestId('login-button').click();
     await page.waitForLoadState('networkidle');
 
-    // Navigate to notifications
-    await page.goto('/thong-bao');
-    await page.waitForLoadState('networkidle');
+    // Navigate to notifications (đợi redirect hoàn tất)
+    await page.goto('/thong-bao', { waitUntil: 'networkidle' });
+    // Check nếu bị redirect về login thì fail
+    const currentUrl = page.url();
+    if (currentUrl.includes('/login')) {
+      throw new Error('Expected to be on /thong-bao but was redirected to login. User may not be logged in properly.');
+    }
     
     // Check if page loads
     await expect(page.locator('text=Thông báo')).toBeVisible();
@@ -131,21 +141,36 @@ test.describe('Complete Flow Tests - All Pages', () => {
   test('Phase 5: Auth persistence across navigation', async ({ page }) => {
     // Login
     await page.goto('/login');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
     await page.getByTestId('mst-input').fill('00109202830');
     await page.getByTestId('password-input').fill('test123');
     await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
+    
+    // Verify logged in state
+    const isLoggedInAfterLogin = await page.evaluate(() => localStorage.getItem('isLoggedIn'));
+    expect(isLoggedInAfterLogin).toBe('true');
 
     // Navigate to multiple pages
     const pagesToTest = ['/khai-thue', '/ho-tro', '/tien-ich'];
     
     for (const route of pagesToTest) {
-      await page.goto(route);
-      await page.waitForLoadState('networkidle');
+      // Navigate và đợi page load (không bị redirect về login)
+      await page.goto(route, { waitUntil: 'networkidle', timeout: 15000 });
+      
+      // Đợi một chút để đảm bảo redirect đã xảy ra (nếu có)
+      await page.waitForTimeout(500);
       
       // Should stay on the page (not redirect to login)
-      await expect(page).toHaveURL(new RegExp(route));
+      const currentUrl = page.url();
+      if (currentUrl.includes('/login')) {
+        throw new Error(`Expected to be on ${route} but was redirected to login. Auth persistence may not be working.`);
+      }
+      
+      // Verify URL matches route
+      expect(currentUrl).toContain(route);
       
       // LocalStorage should still have login state
       const isLoggedIn = await page.evaluate(() => localStorage.getItem('isLoggedIn'));

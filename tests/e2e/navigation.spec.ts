@@ -4,12 +4,13 @@ test.describe('Home Page Navigation', () => {
   test.beforeEach(async ({ page }) => {
     // Login trước
     await page.goto('/login');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
     await page.getByTestId('mst-input').fill('00109202830');
     await page.getByTestId('password-input').fill('test123');
     await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
-    await expect(page).toHaveURL(/\//);
   });
 
   test('Sidebar - Should open and close', async ({ page }) => {
@@ -17,13 +18,13 @@ test.describe('Home Page Navigation', () => {
     await page.locator('button:has(svg)').first().click();
     
     // Check sidebar is visible (text trong Sidebar component)
-    await expect(page.locator('text=TỬ XUÂN CHIẾN').or(page.locator('text=TỪ XUÂN CHIẾN'))).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText('TỬ XUÂN CHIẾN', { exact: true }).first()).toBeVisible({ timeout: 5000 });
     
     // Click overlay to close
     await page.click('div.fixed.inset-0.bg-black\\/50');
     
     // Sidebar should be hidden
-    await expect(page.locator('text=TỬ XUÂN CHIẾN').or(page.locator('text=TỪ XUÂN CHIẾN'))).not.toBeVisible({ timeout: 1000 });
+    await expect(page.getByText('TỬ XUÂN CHIẾN', { exact: true }).first()).not.toBeVisible({ timeout: 1000 });
   });
 
   test('Sidebar Navigation - Click Khai thuế menu item', async ({ page }) => {

@@ -25,24 +25,24 @@ export default function LoginPage() {
       return
     }
 
-    setTimeout(() => {
-      localStorage.setItem("isLoggedIn", "true")
-      localStorage.setItem("userMST", mst)
-      localStorage.setItem("userName", "TỬ XUÂN CHIẾN")
-      router.push("/")
-      setIsLoading(false)
-    }, 500)
+    // Đặt trạng thái đăng nhập ngay lập tức để tránh race condition trong tests
+    localStorage.setItem("isLoggedIn", "true")
+    localStorage.setItem("userMST", mst)
+    localStorage.setItem("userName", "TỬ XUÂN CHIẾN")
+    router.push("/")
+    setIsLoading(false)
   }
 
   return (
-    <div 
+    <div
       className="phone-frame relative flex flex-col"
-      style={{ 
-        backgroundImage: "url('/assets/cf6c2881-6c21-4612-bdb1-7726d72648cc.webp')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        height: '100dvh'
+      style={{
+        backgroundImage:
+          "linear-gradient(180deg, rgba(26,42,58,0.85) 0%, rgba(26,42,58,0.95) 30%, rgba(26,42,58,0.9) 100%), url('/assets/cf6c2881-6c21-4612-bdb1-7726d72648cc.webp'), url('/assets/cf6c2881-6c21-4612-bdb1-7726d72648cc.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        height: "100dvh",
       }}
     >
       {/* Content */}

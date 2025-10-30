@@ -1,4 +1,5 @@
 "use client"
+export const dynamic = 'force-dynamic'
 
 import { ChevronLeft, Home } from "lucide-react"
 import { useRouter, useParams } from "next/navigation"

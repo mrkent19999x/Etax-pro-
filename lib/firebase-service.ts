@@ -301,3 +301,5 @@ export async function getUserTaxDocuments(userId: string): Promise<TaxDocument[]
   return queryDocuments("tax_documents", "userId", "==", userId)
 }
 
+
+export { serverTimestamp }

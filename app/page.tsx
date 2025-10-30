@@ -22,12 +22,11 @@ export default function EtaxMobileHome() {
 
   useEffect(() => {
     if (!mounted) return
-    // Tạm thời bỏ login check để test
-    // const loggedIn = localStorage.getItem("isLoggedIn") === "true"
-    // if (!loggedIn) {
-    //   router.push("/login")
-    //   return
-    // }
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true"
+    if (!loggedIn) {
+      router.push("/login")
+      return
+    }
     setIsLoggedIn(true)
   }, [mounted, router])
 

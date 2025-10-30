@@ -31,11 +31,13 @@ export default defineConfig({
     },
   ],
 
-  // Tắt webServer auto-start, dùng server riêng (npm run dev ở terminal khác)
-  // webServer: {
-  //   command: 'npm run dev',
-  //   url: 'http://localhost:3001',
-  //   reuseExistingServer: !process.env.CI,
-  //   timeout: 120 * 1000,
-  // },
+  // Auto-start server trước khi chạy tests
+  webServer: {
+    command: 'PORT=3001 npm run dev',
+    url: 'http://localhost:3001',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+    stdout: 'ignore',
+    stderr: 'pipe',
+  },
 });

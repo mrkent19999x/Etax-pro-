@@ -4,12 +4,13 @@ test.describe('Responsive & Layout Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Login trước
     await page.goto('/login');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
     await page.getByTestId('mst-input').fill('00109202830');
     await page.getByTestId('password-input').fill('test123');
     await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
-    await expect(page).toHaveURL(/\//);
   });
 
   test('Responsive - Home page layout on mobile viewport', async ({ page }) => {
@@ -17,10 +18,10 @@ test.describe('Responsive & Layout Tests', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     
     // Check header is visible
-    await expect(page.locator('text=eTax Mobile')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'eTax Mobile' }).first()).toBeVisible({ timeout: 10000 });
     
     // Check profile card (text có thể là TỬ XUÂN CHIẾN hoặc TỪ XUÂN CHIẾN)
-    await expect(page.locator('text=TỬ XUÂN CHIẾN').or(page.locator('text=TỪ XUÂN CHIẾN'))).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('TỬ XUÂN CHIẾN', { exact: true }).first()).toBeVisible({ timeout: 10000 });
     
     // Check "Chức năng hay dùng" section
     await expect(page.locator('text=Chức năng hay dùng')).toBeVisible();

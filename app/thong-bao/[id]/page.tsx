@@ -1,4 +1,5 @@
 "use client"
+export const dynamic = 'force-dynamic'
 
 import { DetailHeader } from "@/components/detail-header"
 import { useParams } from "next/navigation"

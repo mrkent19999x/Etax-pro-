@@ -10,10 +10,12 @@ test.describe('Tra cứu chứng từ - Layout 5 cột', () => {
     
     // Login trước khi test
     await page.goto('/login', { waitUntil: 'networkidle' });
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
     await page.getByTestId('mst-input').fill('00109202830');
     await page.getByTestId('password-input').fill('test123');
     await page.getByTestId('login-button').click();
-    await page.waitForURL(/\//, { timeout: 10000 });
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
   });
 
   test('Layout kết quả tra cứu - 5 cột dọc, không scroll ngang', async ({ page }) => {

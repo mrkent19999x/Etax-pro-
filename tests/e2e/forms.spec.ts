@@ -9,36 +9,44 @@ test.describe('Form Submissions', () => {
   });
 
   test('Login Form - Fill and submit successfully', async ({ page }) => {
-    test.setTimeout(15000); // 15 giây cho toàn bộ test
+    test.setTimeout(20000); // 20 giây cho toàn bộ test
     
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 10000 });
     
-    // Điền MST với timeout 5s
-    await page.waitForLoadState('domcontentloaded');
-    await page.getByTestId('mst-input').fill('00109202830', { timeout: 5000 });
+    // Đợi elements có sẵn
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
+    await page.waitForSelector('[data-testid="password-input"]', { timeout: 10000 });
+    await page.waitForSelector('[data-testid="login-button"]', { timeout: 10000 });
     
-    // Điền password với timeout 5s
-    await page.getByTestId('password-input').fill('test123', { timeout: 5000 });
+    // Điền MST
+    await page.getByTestId('mst-input').fill('00109202830');
     
-    // Click submit với timeout 5s
-    await page.getByTestId('login-button').click({ timeout: 5000 });
+    // Điền password
+    await page.getByTestId('password-input').fill('test123');
     
-    // Đợi redirect với timeout 10s
-    await expect(page).toHaveURL(/\//, { timeout: 10000 });
+    // Click submit
+    await page.getByTestId('login-button').click();
+    
+    // Đợi redirect với timeout
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
     
     // Verify login success - dùng .first() để tránh strict mode violation
-    await expect(page.locator('text=TỬ XUÂN CHIẾN').first()).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=TỬ XUÂN CHIẾN').first()).toBeVisible({ timeout: 10000 });
   });
 
   test('Login Form - Validation errors on empty fields', async ({ page }) => {
-    test.setTimeout(10000); // 10 giây cho validation test
+    test.setTimeout(15000); // 15 giây cho validation test
     
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 10000 });
     
-    // Click submit mà không điền gì với timeout 5s
-    await page.click('button:has-text("Đăng nhập")', { timeout: 5000 });
+    // Đợi button có sẵn
+    await page.waitForSelector('[data-testid="login-button"]', { timeout: 10000 });
     
-    // Verify error message xuất hiện với timeout 5s
+    // Click submit mà không điền gì
+    await page.getByTestId('login-button').click();
+    
+    // Verify error message xuất hiện
     await expect(page.locator('text="Vui lòng nhập MST và mật khẩu"')).toBeVisible({ timeout: 5000 });
     
     // Verify không redirect, vẫn ở login page
@@ -50,13 +58,19 @@ test.describe('Form Submissions', () => {
     
     // Login trước
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 10000 });
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830', { timeout: 5000 });
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123', { timeout: 5000 });
-    await page.click('button:has-text("Đăng nhập")', { timeout: 5000 });
-    await expect(page).toHaveURL(/\//, { timeout: 10000 });
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
     
-    // Navigate trực tiếp tới đổi mật khẩu
-    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 10000 });
+    // Navigate trực tiếp tới đổi mật khẩu (đợi redirect hoàn tất)
+    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 15000 });
+    // Check nếu bị redirect về login thì fail
+    if (page.url().includes('/login')) {
+      throw new Error('Expected to be on /doi-mat-khau but was redirected to login. User may not be logged in properly.');
+    }
     
     // Điền mật khẩu cũ với timeout 5s
     await page.fill('input[placeholder="Nhập mật khẩu cũ"]', 'test123', { timeout: 5000 });
@@ -84,13 +98,19 @@ test.describe('Form Submissions', () => {
     
     // Login trước
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 10000 });
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830', { timeout: 5000 });
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123', { timeout: 5000 });
-    await page.click('button:has-text("Đăng nhập")', { timeout: 5000 });
-    await expect(page).toHaveURL(/\//, { timeout: 10000 });
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
     
-    // Navigate trực tiếp tới đổi mật khẩu
-    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 10000 });
+    // Navigate trực tiếp tới đổi mật khẩu (đợi redirect hoàn tất)
+    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 15000 });
+    // Check nếu bị redirect về login thì fail
+    if (page.url().includes('/login')) {
+      throw new Error('Expected to be on /doi-mat-khau but was redirected to login. User may not be logged in properly.');
+    }
     
     // Điền thông tin với mật khẩu không khớp
     await page.fill('input[placeholder="Nhập mật khẩu cũ"]', 'test123', { timeout: 5000 });
@@ -112,13 +132,19 @@ test.describe('Form Submissions', () => {
     
     // Login trước
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 10000 });
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830', { timeout: 5000 });
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123', { timeout: 5000 });
-    await page.click('button:has-text("Đăng nhập")', { timeout: 5000 });
-    await expect(page).toHaveURL(/\//, { timeout: 10000 });
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
     
-    // Navigate trực tiếp tới đổi mật khẩu
-    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 10000 });
+    // Navigate trực tiếp tới đổi mật khẩu (đợi redirect hoàn tất)
+    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 15000 });
+    // Check nếu bị redirect về login thì fail
+    if (page.url().includes('/login')) {
+      throw new Error('Expected to be on /doi-mat-khau but was redirected to login. User may not be logged in properly.');
+    }
     
     // Điền thông tin với mật khẩu quá ngắn (<6 ký tự)
     await page.fill('input[placeholder="Nhập mật khẩu cũ"]', 'test123', { timeout: 5000 });
@@ -137,13 +163,19 @@ test.describe('Form Submissions', () => {
     
     // Login trước
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 10000 });
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830', { timeout: 5000 });
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123', { timeout: 5000 });
-    await page.click('button:has-text("Đăng nhập")', { timeout: 5000 });
-    await expect(page).toHaveURL(/\//, { timeout: 10000 });
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
     
-    // Navigate trực tiếp tới đổi mật khẩu
-    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 10000 });
+    // Navigate trực tiếp tới đổi mật khẩu (đợi redirect hoàn tất)
+    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 15000 });
+    // Check nếu bị redirect về login thì fail
+    if (page.url().includes('/login')) {
+      throw new Error('Expected to be on /doi-mat-khau but was redirected to login. User may not be logged in properly.');
+    }
     
     // Không điền gì, submit ngay với timeout 5s
     await page.click('button:has-text("Đổi mật khẩu")', { timeout: 5000 });
@@ -157,13 +189,19 @@ test.describe('Form Submissions', () => {
     
     // Login trước
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 10000 });
-    await page.fill('input[placeholder="Mã số thuế"]', '00109202830', { timeout: 5000 });
-    await page.fill('input[placeholder="Mật khẩu"]', 'test123', { timeout: 5000 });
-    await page.click('button:has-text("Đăng nhập")', { timeout: 5000 });
-    await expect(page).toHaveURL(/\//, { timeout: 10000 });
+    await page.waitForSelector('[data-testid="mst-input"]', { timeout: 10000 });
+    await page.getByTestId('mst-input').fill('00109202830');
+    await page.getByTestId('password-input').fill('test123');
+    await page.getByTestId('login-button').click();
+    await expect(page).toHaveURL(/\//, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
     
-    // Navigate trực tiếp tới đổi mật khẩu
-    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 10000 });
+    // Navigate trực tiếp tới đổi mật khẩu (đợi redirect hoàn tất)
+    await page.goto('/doi-mat-khau', { waitUntil: 'networkidle', timeout: 15000 });
+    // Check nếu bị redirect về login thì fail
+    if (page.url().includes('/login')) {
+      throw new Error('Expected to be on /doi-mat-khau but was redirected to login. User may not be logged in properly.');
+    }
     
     // Điền mật khẩu
     await page.fill('input[placeholder="Nhập mật khẩu cũ"]', 'test123', { timeout: 5000 });
