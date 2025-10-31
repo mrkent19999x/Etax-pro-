@@ -1,5 +1,6 @@
 {
     "recommendations": [
-        "ms-vscode.theme-materialkit"
+        "ms-vscode.theme-materialkit",
+        "qwenlm.qwen-code-vscode-ide-companion"
     ]
 }

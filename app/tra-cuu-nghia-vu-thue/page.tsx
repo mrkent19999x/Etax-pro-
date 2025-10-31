@@ -154,7 +154,7 @@ export default function TraCuuNghiaVuThuePage() {
                       </div>
                     </div>
                     <Link
-                      href={`/tra-cuu-nghia-vu-thue/${obligation.id}`}
+                      href={`/tra-cuu-nghia-vu-thue?id=${obligation.id}`}
                       className="flex-shrink-0 mt-1 text-red-600 hover:text-red-700 transition-colors"
                     >
                       <Eye size={20} />

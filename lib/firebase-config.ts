@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
-import { getAuth } from "firebase/auth"
-import { getStorage } from "firebase/storage"
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore"
+import { getAuth, connectAuthEmulator } from "firebase/auth"
+import { getStorage, connectStorageEmulator } from "firebase/storage"
 
 // Firebase config dùng biến môi trường cho project anhbao-373f3
 const firebaseConfig = {
@@ -15,8 +15,32 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
+// Connect to emulators if in development and USE_EMULATOR=true
+const USE_EMULATOR = process.env.NEXT_PUBLIC_USE_EMULATOR === "true"
+
 export const db = getFirestore(app)
 export const auth = getAuth(app)
 export const storage = getStorage(app)
-export default app
 
+// Connect to emulators (chỉ connect 1 lần, không được gọi lại)
+if (USE_EMULATOR && typeof window !== "undefined") {
+  try {
+    // Firestore emulator
+    if (!(db as any)._settings?.host?.includes("localhost")) {
+      connectFirestoreEmulator(db, "localhost", 8080)
+    }
+    // Auth emulator
+    if (!(auth as any)._delegate?.config?.host?.includes("localhost")) {
+      connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true })
+    }
+    // Storage emulator
+    if (!(storage as any)._delegate?._host?.includes("localhost")) {
+      connectStorageEmulator(storage, "localhost", 9199)
+    }
+    console.log("✅ Connected to Firebase Emulators")
+  } catch (error) {
+    console.warn("⚠️ Emulator connection error (already connected?):", error)
+  }
+}
+
+export default app

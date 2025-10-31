@@ -28,6 +28,8 @@ next-env.d.ts
 
 # debug logs
 *.log
+firebase-debug.log
+firestore-debug.log
 dataconnect-debug.log
 pglite-debug.log
 
@@ -38,6 +40,10 @@ playwright-report/
 # temp files
 temp_*
 *.plan.md
+*.txt
+sdkconfig.txt
+sdkconfig.json
+mock-server.js
 
 # IDE
 *.code-workspace
@@ -46,6 +52,9 @@ temp_*
 # build artifacts
 .firebase/
 dist/
+.next/
+test-results/
+playwright-report/
 
 # IDE and tool caches
 .qodo/

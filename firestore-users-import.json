@@ -1,0 +1,49 @@
+{
+  "__collections__": {
+    "users": {
+      "Dan1VqVNw7MmjxyjSO4ZZpXEob03": {
+        "userId": "Dan1VqVNw7MmjxyjSO4ZZpXEob03",
+        "email": "mrkent1999x@gmail.com",
+        "name": "Test User",
+        "role": "user",
+        "mstList": ["00109202830"],
+        "createdAt": {
+          "__datatype__": "timestamp",
+          "value": {
+            "_seconds": 1730361600,
+            "_nanoseconds": 0
+          }
+        },
+        "updatedAt": {
+          "__datatype__": "timestamp",
+          "value": {
+            "_seconds": 1730361600,
+            "_nanoseconds": 0
+          }
+        }
+      },
+      "MXYmycuNudMoaD2f6H0JmUvxVqG2": {
+        "userId": "MXYmycuNudMoaD2f6H0JmUvxVqG2",
+        "email": "begau1302@gmail.com",
+        "name": "Admin User",
+        "role": "admin",
+        "mstList": ["999999999"],
+        "createdAt": {
+          "__datatype__": "timestamp",
+          "value": {
+            "_seconds": 1730361600,
+            "_nanoseconds": 0
+          }
+        },
+        "updatedAt": {
+          "__datatype__": "timestamp",
+          "value": {
+            "_seconds": 1730361600,
+            "_nanoseconds": 0
+          }
+        }
+      }
+    }
+  }
+}
+

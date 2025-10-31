@@ -4,6 +4,9 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { useBodyLock } from "@/hooks/use-body-lock"
+import { auth, db } from "@/lib/firebase-config"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -25,13 +28,87 @@ export default function LoginPage() {
       return
     }
 
-    setTimeout(() => {
+    try {
+      let userEmail = mst.trim()
+      let userMST = mst.trim()
+
+      // If user types MST (not email), find user by MST in Firestore
+      if (!mst.includes("@")) {
+        // Query Firestore to find user with this MST
+        const usersRef = collection(db, "users")
+        const q = query(
+          usersRef,
+          where("mstList", "array-contains", mst.trim())
+        )
+        const querySnapshot = await getDocs(q)
+        
+        if (querySnapshot.empty) {
+          // Try searching in mst field (legacy)
+          const q2 = query(usersRef, where("mst", "==", mst.trim()))
+          const querySnapshot2 = await getDocs(q2)
+          
+          if (querySnapshot2.empty) {
+            setError("Mã số thuế không tồn tại trong hệ thống")
+            setIsLoading(false)
+            return
+          }
+          
+          const userDoc = querySnapshot2.docs[0]
+          userEmail = userDoc.data().email
+          if (!userEmail) {
+            setError("Tài khoản chưa được liên kết với email. Vui lòng liên hệ quản trị viên.")
+            setIsLoading(false)
+            return
+          }
+        } else {
+          const userDoc = querySnapshot.docs[0]
+          userEmail = userDoc.data().email
+          if (!userEmail) {
+            setError("Tài khoản chưa được liên kết với email. Vui lòng liên hệ quản trị viên.")
+            setIsLoading(false)
+            return
+          }
+        }
+      }
+
+      // Authenticate with Firebase Auth using email/password
+      const cred = await signInWithEmailAndPassword(auth, userEmail, password.trim())
+      
+      // Read role from Firestore users/{uid}
+      const uid = cred.user.uid
+      const snap = await getDoc(doc(db, "users", uid))
+      const role = snap.exists() ? (snap.data() as any).role : undefined
+      const userData = snap.exists() ? snap.data() : null
+
+      // Seed local session for current app guards
       localStorage.setItem("isLoggedIn", "true")
-      localStorage.setItem("userMST", mst)
-      localStorage.setItem("userName", "TỬ XUÂN CHIẾN")
-      router.push("/")
+      localStorage.setItem("userMST", userMST)
+      localStorage.setItem("userName", userData?.name || cred.user.email || "USER")
+
+      if (role === "admin") {
+        router.push("/admin")
+      } else {
+        router.push("/")
+      }
       setIsLoading(false)
-    }, 500)
+    } catch (err: any) {
+      // Handle specific Firebase Auth errors
+      let errorMessage = "Đăng nhập thất bại"
+      if (err.code === "auth/user-not-found") {
+        errorMessage = "Tài khoản không tồn tại"
+      } else if (err.code === "auth/wrong-password") {
+        errorMessage = "Mật khẩu không đúng"
+      } else if (err.code === "auth/invalid-credential") {
+        errorMessage = "Email hoặc mật khẩu không đúng"
+      } else if (err.code === "auth/too-many-requests") {
+        errorMessage = "Quá nhiều lần thử. Vui lòng thử lại sau."
+      } else if (err.message) {
+        errorMessage = err.message
+      }
+      
+      setError(errorMessage)
+      setIsLoading(false)
+    }
   }
 
   return (

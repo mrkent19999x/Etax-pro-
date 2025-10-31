@@ -1,0 +1,38 @@
+# Cursor IDE ignore file
+# Cursor sẽ không index những folder/file này → giảm lag
+
+# Dependencies (không cần index)
+node_modules/
+functions/node_modules/
+
+# Build outputs (tự động tạo lại)
+.next/
+dist/
+out/
+build/
+.firebase/
+
+# Test artifacts
+test-results/
+playwright-report/
+coverage/
+
+# Cache & temp files
+.turbo/
+.cache/
+*.log
+*.tsbuildinfo
+
+# IDE caches
+.vscode/
+.cursor/
+.qodo/
+.continue/
+
+# Large generated files
+package-lock.json
+src/dataconnect-generated/
+
+# Git
+.git/
+

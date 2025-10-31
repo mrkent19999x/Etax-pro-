@@ -1,0 +1,100 @@
+# .cursorrules for Etax-pro- Project
+
+## Project Overview
+- **Type**: Next.js 16 PWA (Static Export) + Firebase (Spark Plan)
+- **Purpose**: Clone UI from eTax Mobile app → Web PWA with Admin System
+- **Language**: Vietnamese for user communication, English for code/logs
+
+## Tech Stack
+- Frontend: Next.js 16 (App Router), React 19, TypeScript, TailwindCSS
+- Backend: Firebase (Auth, Firestore, Functions)
+- Build: Static export (`output: 'export'`, `distDir: 'dist'`)
+- Hosting: Firebase Hosting (Spark plan - FREE)
+
+## Critical Rules
+
+### Build Configuration
+- ✅ `next.config.mjs`: Must have `output: 'export'`, `distDir: 'dist'`
+- ✅ NO `/app/api` routes (use `/app/_api` or Firebase Functions)
+- ✅ Dynamic routes: `"use client"` on line 1, `export const dynamic = 'force-dynamic'` on line 2
+
+### Firebase Spark Only
+- ✅ NO external API calls → NO Blaze plan required
+- ✅ All data: Firestore only (no external services)
+- ✅ Functions: Internal only (no fetch to external domains)
+
+### Authentication Flow
+- Single login form at `/login` accepts:
+  - MST + password (for users)
+  - Email + password (for admins - auto-detected by `@`)
+- After login → check `users/{uid}.role` in Firestore
+  - `role === "admin"` → redirect to `/admin`
+  - else → redirect to `/` (home)
+
+### File Structure
+```
+app/
+├── _api/          # API routes (renamed from /api for static export)
+├── admin/         # Admin pages
+├── login/         # Login page
+└── [pages]/       # User-facing pages
+
+components/
+├── ui/            # Shared UI components
+├── admin/         # Admin components
+└── [components]/  # Feature components
+
+lib/               # Utilities, services
+hooks/             # Custom React hooks
+config/            # Configuration files
+```
+
+### Grid Configuration
+- Home page grid: 10 items (keep as-is)
+- Frequent features carousel: 4 items
+
+### Code Standards
+- TypeScript strict mode
+- Use React Hooks for state
+- TailwindCSS for styling
+- Always use `ProtectedView` for authenticated pages
+- Use `DetailHeader` for detail pages
+
+### Deployment
+- Build: `npm run build` → generates `dist/`
+- Deploy: `firebase deploy --only hosting`
+- Project: `anhbao-373f3` (Spark plan)
+
+## Agent Workflow
+
+### Before Making Changes
+1. Check `.cursorrules` (this file)
+2. Verify against Next.js docs (nextjs.org/docs)
+3. Verify against Firebase docs (firebase.google.com/docs)
+4. Run `npm run build` to ensure no errors
+
+### When Adding Features
+1. Follow existing patterns (check similar pages)
+2. Use existing components (`ServiceGrid`, `ProtectedView`, etc.)
+3. Maintain static export compatibility
+4. Test build before committing
+
+### Error Handling
+- If build fails → check:
+  - Dynamic routes syntax (`"use client"` + `dynamic`)
+  - API routes existence (should be in `_api` or removed)
+  - External API calls (should be none)
+- Return exact error message, no assumptions
+
+## Documentation Priority
+1. **README.md** - Overview, setup, quick start
+2. **docs/** - Detailed guides (dev, deploy, testing)
+3. **.cursorrules** - This file (agent reference)
+
+## Don't Do
+- ❌ Create `/app/api` routes (use `_api` or Functions)
+- ❌ Add external API calls (breaks Spark plan)
+- ❌ Change `output: 'export'` (required for static PWA)
+- ❌ Remove `ProtectedView` wrapper (breaks auth)
+- ❌ Create duplicate documentation files
+

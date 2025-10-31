@@ -118,7 +118,7 @@ export default function NotificationsPage() {
             filteredNotifications.slice(0, 2).map((notif) => (
               <div key={notif.id} className="space-y-1">
                 <p className="text-gray-700 text-xs px-1">{notif.date}</p>
-                <Link href={`/thong-bao/${notif.id}`}>
+                <Link href={`/thong-bao?id=${notif.id}`}>
                   <div className="bg-white rounded-xl p-4 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
                     <div className="flex justify-between items-start gap-2 mb-2">
                       <p className="text-gray-800 font-medium text-sm flex-1">{notif.title}</p>

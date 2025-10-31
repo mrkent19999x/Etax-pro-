@@ -112,13 +112,13 @@ export default function EtaxMobileHome() {
                 {frequentFeatures.map((feature) => (
                   <Link key={feature.id} href={feature.href}>
                     <div className="flex-shrink-0 w-24 flex flex-col items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-                      <div className="w-14 h-14 flex items-center justify-center overflow-hidden">
+                      <div className="w-[44px] h-[44px] flex items-center justify-center overflow-hidden">
                         <Image 
                           src={`/assets/${feature.icon}`} 
                           alt={feature.label} 
                           width={48} 
                           height={48}
-                          className="object-contain w-full h-full"
+                          className="object-contain"
                         />
                       </div>
                       <p className="text-xs text-center text-gray-700 font-medium leading-tight">{feature.label}</p>
@@ -139,13 +139,13 @@ export default function EtaxMobileHome() {
               {services.map((service) => (
                 <Link key={service.id} href={service.href} className={service.href === "#" ? "pointer-events-none" : ""}>
                   <div className="flex flex-col items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-                    <div className="w-14 h-14 flex items-center justify-center overflow-hidden">
+                    <div className="w-[44px] h-[44px] flex items-center justify-center overflow-hidden">
                       <Image 
                         src={`/assets/${service.icon}`} 
                         alt={service.label} 
                         width={48} 
                         height={48}
-                        className="object-contain w-full h-full"
+                        className="object-contain"
                       />
                     </div>
                     <p className="text-xs text-center text-gray-700 font-medium leading-tight">{service.label}</p>

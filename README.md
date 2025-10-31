@@ -166,10 +166,12 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
 
 ## 📚 Documentation
 
-- **[QUICK-START.md](./QUICK-START.md)** - Hướng dẫn setup nhanh
-- **[LOCAL-DEV-GUIDE.md](./LOCAL-DEV-GUIDE.md)** - Development workflow
-- **[FIREBASE-INTEGRATION.md](./FIREBASE-INTEGRATION.md)** - Firebase setup
-- **[TEST-RESULTS.md](./TEST-RESULTS.md)** - Kết quả testing
+Chi tiết xem trong thư mục [`docs/`](./docs/):
+- **Development**: `docs/DEVELOPMENT.md` - Development workflow
+- **Deployment**: `docs/DEPLOYMENT.md` - Deployment guide
+- **Firebase**: `docs/FIREBASE.md` - Firebase setup
+- **Testing**: `docs/TESTING.md` - Testing guide
+- **Runbook**: `docs/RUNBOOK.md` - Operational runbook
 
 ## 🏆 Quality Metrics
 
