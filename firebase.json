@@ -33,6 +33,9 @@
     "dataconnect": {
       "dataDir": "dataconnect/.dataconnect/pgliteData"
     },
+    "auth": {
+      "port": 9099
+    },
     "functions": {
       "port": 5001
     },
